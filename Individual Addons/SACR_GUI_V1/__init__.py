@@ -64,6 +64,8 @@ class SACRUI_PT_g_props(T.Panel):
           py_compat = rig.data["script_format"]
         except (AttributeError, TypeError, KeyError):
           py_compat = -1
+          
+          
         
         if py_compat != ui_format:
           propRow = layout.row()
@@ -78,7 +80,10 @@ class SACRUI_PT_g_props(T.Panel):
         fProp = rig.pose.bones["Face_Properties"]
         
         face_on = gProp['Face Toggle']
-        lite = rig.data["lite"]
+        try:
+          lite = rig.data["lite"]
+        except (AttributeError, TypeError, KeyError):
+          lite = False
         
         propRow = layout.row()
         propRow.label(text="Rig Properties", icon="PROPERTIES")
@@ -99,6 +104,16 @@ class SACRUI_PT_g_props(T.Panel):
         if face_on == True:   
           boxCol = boxRow.column()
           boxCol.prop(fProp,'["Face | UV"]', text="UV Projection", toggle=True)
+        
+        propRow = layout.row()
+        propBox = propRow.box()
+        
+        propBox.label(text="Style Settings")
+        
+        propBox.prop(gProp, '["Slim Arms"]', text="Arm Style")
+        propBox.prop(gProp, '["Female Curves"]', text='Female Curves')
+        
+        propBox.separator(type="LINE")
         
         propRow = layout.row()
         propBox = propRow.box()
@@ -127,7 +142,6 @@ class SACRUI_PT_g_props(T.Panel):
         boxCol.label(text='Right Leg')
         boxCol.prop(gProp, '["Leg FK"]', index=1, text="Disable", slider=True)
         boxCol.prop(gProp, '["Leg Stretch"]', index=1, text="Stretch", slider=True)
-        
         
         if lite == False:
           propRow = layout.row()
@@ -217,7 +231,11 @@ class SACRUI_PT_f_props(T.Panel):
         ebProp = rig.pose.bones["Eyebrow_Properties"]
         
         face_on = gProp['Face Toggle']
-        lite = rig.data["lite"]
+        
+        try:
+          lite = rig.data["lite"]
+        except (AttributeError, TypeError, KeyError):
+          lite = False
         
         propRow = layout.row()
         propRow.prop(gProp,'["Face Toggle"]', toggle=True, text="Enable Facerig")
@@ -296,6 +314,7 @@ class SACRUI_PT_f_props(T.Panel):
             boxRow = propBox.row()
             boxCol = boxRow.column()
             boxCol.label(text="Left Height")
+            
             
             boxCol.prop(mProp, '["Molar Height (R -> L)"]', index=3, slider=True, text="")
             boxCol.prop(mProp, '["Molar Height (R -> L)"]', index=2, slider=True, text="")
