@@ -5,19 +5,19 @@ schema_version = "1.0.0"
 id = "SACR_CI"
 version = "0.1.0"
 name = "SACR Control Interface"
-tagline = "This is another extension"
+tagline = "An Addon containing control scripts for SACR"
 maintainer = "Sakura Sedaia"
 # Supported types: "add-on", "theme"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc
-# website = "https://extensions.blender.org/add-ons/my-example-package/"
+website = "https://github.com/SakuraSedaia/SACR-Control-Interface"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
-# tags = ["Animation", "Sequencer"]
+tags = ["Rigging", "User Interface"]
 
-blender_version_min = "4.2.0"
+blender_version_min = "4.5.0"
 # # Optional: Blender version that the extension does not support, earlier versions are supported.
 # # This can be omitted and defined later on the extensions platform if an issue is found.
 # blender_version_max = "5.1.0"
@@ -28,10 +28,9 @@ license = [
   "SPDX:GPL-3.0-or-later",
 ]
 # # Optional: required by some licenses.
-# copyright = [
-#   "2002-2024 Developer Name",
-#   "1998 Company Name",
-# ]
+copyright = [
+  "2024-2025 Sakura Sedaia",
+]
 
 # # Optional: list of supported platforms. If omitted, the extension will be available in all operating systems.
 # platforms = ["windows-x64", "macos-arm64", "linux-x64"]

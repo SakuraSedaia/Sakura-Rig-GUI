@@ -141,7 +141,6 @@ T.Armature.M_Style = P.EnumProperty(
 
 class SACRUI_PT_rig_info(T.Panel):
     bl_label = 'Version Info'
-    bl_idname = 'sacr_ui.rig_info'
     bl_category = 'SACR UI'
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -177,7 +176,6 @@ class SACRUI_PT_bone_groups(T.Panel):
     # Class Definition
     # ==============
     bl_label = 'Visibility'
-    bl_idname = 'sacr_ui.bone_groups'
     bl_icon = "OPTIONS"
     bl_category = 'SACR UI'
     bl_space_type = 'VIEW_3D'
@@ -334,7 +332,6 @@ class SACRUI_PT_bone_groups(T.Panel):
 class SACRUI_PT_properties(T.Panel):
     bl_label = "Properties"
     bl_icon = "PROPERTIES"
-    bl_idname = 'sacr_ui.properties'
     bl_category = 'SACR UI'
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
