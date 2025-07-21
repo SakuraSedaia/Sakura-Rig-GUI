@@ -11,31 +11,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-bl_info = {
-    "name"          : "SACR R7.2 Controls",
-    "author"        : "Sakura Sedaia",
-    "version"       : (0, 1, 0),
-    "blender"       : (4, 3, 0),
-    "description"   : "Control UI for SACR R7.2",
-    "location"      : "3D View > SACR UI",
-    "warning"       : "Script is currently in Development",
-    "doc_url"       : "",
-    "tracker_url"   : "https://github.com/SakuraSedaia/SACR-MC-Rig/tree/main",
-    'support'       : "COMMUNITY",
-    "category"      : "User Interface"
-}
 import bpy
-""" This Script is for use with SACR R7.2.1 """
+
 # ==========
 # bpy forms & other Variables
 # ==========
 T = bpy.types
 addon_id = "sacr_r7_ui"
 
-# Script Only
-bonegroups_free = False # Defaults to False
-is_sacr = False
+ui_format = 0 # Matched to the variable on an SACR Armature, used for ensuring proper compatability
+# Fully Compatible:
+# - 7.2.1
+# 
+# Partially Compatible
+# - 7.2.0
+#   - Molars do not controllable via script
 
+# ==============
 # Properties Start
 # ==============
 class SACRUI_PT_g_props(T.Panel):
@@ -68,13 +60,28 @@ class SACRUI_PT_g_props(T.Panel):
         
         scene = context.scene
         
+        try:
+          py_compat = rig.data["script_format"]
+        except (AttributeError, TypeError, KeyError):
+          py_compat = -1
+        
+        if py_compat != ui_format:
+          propRow = layout.row()
+          propBox = propRow.box()
+          warnRow = propBox.column()
+          warnRow.label(text="WARNING", icon="ERROR")
+          warnRow.alignment = 'EXPAND'
+          warnRow.label(text="SACR Version not Compatible")
+            
+          
         gProp = rig.pose.bones['Rig_Properties']
         fProp = rig.pose.bones["Face_Properties"]
         
         face_on = gProp['Face Toggle']
         lite = rig.data["lite"]
         
-        layout.label(text="Rig Properties", icon="PROPERTIES")
+        propRow = layout.row()
+        propRow.label(text="Rig Properties", icon="PROPERTIES")
         
         layout.separator(type="LINE")
         
@@ -188,6 +195,20 @@ class SACRUI_PT_f_props(T.Panel):
         layout = self.layout
         rig = context.active_object
         
+        try:
+          py_compat = rig.data["script_format"]
+        except (AttributeError, TypeError, KeyError):
+          py_compat = -1
+          
+        if py_compat != ui_format:
+          propRow = layout.row()
+          propBox = propRow.box()
+          warnRow = propBox.column()
+          warnRow.label(text="WARNING", icon="ERROR")
+          warnRow.alignment = 'EXPAND'
+          warnRow.label(text="SACR Version not Compatible")
+        
+        
         gProp = rig.pose.bones['Rig_Properties']
         mProp = rig.pose.bones["Mouth_Properties"]
         eProp = rig.pose.bones["Eye_Properties"]
@@ -197,8 +218,11 @@ class SACRUI_PT_f_props(T.Panel):
         lite = rig.data["lite"]
         
         propRow = layout.row()
+        propRow.prop(gProp,'["Face Toggle"]', toggle=True, text="Enable Facerig")
+        layout.separator(type="LINE")
+        
+        propRow = layout.row()
         propBox = propRow.box()
-        propBox.prop(gProp,'["Face Toggle"]', toggle=True, text="Enable Facerig")
         boxRow = propBox.row()
         if face_on == True:
             boxRow.label(text="Eyebrow Settings", icon="PROPERTIES")
@@ -292,6 +316,7 @@ class SACRUI_PT_f_props(T.Panel):
         else:
             boxRow.label(text="Facerig Disabled", icon="ERROR")
 
+
 # ==============
 # Properties End
 # Register Classes
@@ -310,8 +335,6 @@ def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
         
-        
-    
 if __name__ == '__main__':
     register()
     
