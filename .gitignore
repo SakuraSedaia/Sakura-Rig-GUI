@@ -2,3 +2,6 @@
 /SACR_Control_Interface/__pycache__
 /old_docs
 *.blend1
+/Dev_Rig
+/Individual Addons/SACR_GUI_V1/__pycache__
+/Individual Addons/SACR_GUI_V2/__pycache__
