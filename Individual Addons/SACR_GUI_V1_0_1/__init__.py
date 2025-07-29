@@ -64,8 +64,6 @@ class SACRUI_PT_g_props(T.Panel):
           py_compat = rig.data["script_format"]
         except (AttributeError, TypeError, KeyError):
           py_compat = -1
-          
-          
         
         if py_compat != ui_format:
           propRow = layout.row()
@@ -75,24 +73,23 @@ class SACRUI_PT_g_props(T.Panel):
           warnRow.alignment = 'EXPAND'
           warnRow.label(text="SACR Version not Compatible")
             
-          
+        
         gProp = rig.pose.bones['Rig_Properties']
         fProp = rig.pose.bones["Face_Properties"]
+        layer = rig.data.collections_all
         
         face_on = gProp['Face Toggle']
-        try:
-          lite = rig.data["lite"]
-        except (AttributeError, TypeError, KeyError):
-          lite = False
+        lite = rig.data["lite"]
         
         propRow = layout.row()
         propRow.label(text="Rig Properties", icon="PROPERTIES")
         
+        propRow = layout.row()
+        propRow.prop(layer["Properties"], "is_visible", text="Enable Classic Props", toggle=True)
         layout.separator(type="LINE")
         
         propRow = layout.row()
         propBox = propRow.box()
-        
         propBox.label(text="Head Settings")
         propBox.prop(gProp,'["Face Toggle"]', toggle=True, text="Enable Facerig")
         
@@ -107,16 +104,13 @@ class SACRUI_PT_g_props(T.Panel):
         
         propRow = layout.row()
         propBox = propRow.box()
+        boxRow = propBox.row()
+        boxRow.label(text="Limb Settings")
         
-        propBox.label(text="Style Settings")
+        boxRow = propBox.row()
+        boxRow.prop(gProp, '["Slim Arms"]', text="Arm Dimensions")
         
-        propBox.prop(gProp, '["Slim Arms"]', text="Arm Style")
-        propBox.prop(gProp, '["Female Curves"]', text='Female Curves')
-        
-        propBox.separator(type="LINE")
-        
-        propRow = layout.row()
-        propBox = propRow.box()
+        boxRow = propBox.row()
         propBox.label(text="IK Settings")
         
         boxRow = propBox.row()
@@ -142,6 +136,7 @@ class SACRUI_PT_g_props(T.Panel):
         boxCol.label(text='Right Leg')
         boxCol.prop(gProp, '["Leg FK"]', index=1, text="Disable", slider=True)
         boxCol.prop(gProp, '["Leg Stretch"]', index=1, text="Stretch", slider=True)
+        
         
         if lite == False:
           propRow = layout.row()
@@ -174,6 +169,12 @@ class SACRUI_PT_g_props(T.Panel):
         
         
         if lite == False:
+          propRow = layout.row()
+          propBox = propRow.box()
+          boxRow = propBox.row()
+          propBox.label(text='Deformations')
+          propBox.prop(gProp, '["Female Curves"]')
+          
           propBox.separator(type="LINE")
           
           propBox.label(text="Lattices")
@@ -231,11 +232,7 @@ class SACRUI_PT_f_props(T.Panel):
         ebProp = rig.pose.bones["Eyebrow_Properties"]
         
         face_on = gProp['Face Toggle']
-        
-        try:
-          lite = rig.data["lite"]
-        except (AttributeError, TypeError, KeyError):
-          lite = False
+        lite = rig.data["lite"]
         
         propRow = layout.row()
         propRow.prop(gProp,'["Face Toggle"]', toggle=True, text="Enable Facerig")
@@ -283,6 +280,7 @@ class SACRUI_PT_f_props(T.Panel):
             if lite == False:
               boxRow = propBox.row()
               boxRow.prop(eProp, '["Eyelashes"]', text="Eyelash Style")
+              boxRow.prop(eProp, '["Eyesparkle"]', text="Eyesparkle", toggle=True)
             
             propBox.separator(type="LINE")
               
@@ -314,7 +312,6 @@ class SACRUI_PT_f_props(T.Panel):
             boxRow = propBox.row()
             boxCol = boxRow.column()
             boxCol.label(text="Left Height")
-            
             
             boxCol.prop(mProp, '["Molar Height (R -> L)"]', index=3, slider=True, text="")
             boxCol.prop(mProp, '["Molar Height (R -> L)"]', index=2, slider=True, text="")
