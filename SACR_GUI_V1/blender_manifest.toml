@@ -2,7 +2,7 @@ schema_version = "1.0.0"
 
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
-id = "SACR_GUI"
+id = "Sakura_Rig_GUI"
 version = "1.0.1"
 name = "Sakura Rig GUI"
 tagline = "A control script for use with Sakura's Character Rigs"
