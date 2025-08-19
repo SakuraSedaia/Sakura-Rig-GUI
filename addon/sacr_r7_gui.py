@@ -47,6 +47,7 @@ class SEDAIA_PT_uiGlobal(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = rig_name
+    bl_order = 0
 
     @classmethod
     def poll(self, context):
@@ -134,6 +135,7 @@ class SEDAIA_PT_uiBoneGroups(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = rig_name
+    bl_order = 0
 
     @classmethod
     def poll(self, context):
@@ -183,6 +185,7 @@ class SEDAIA_PT_uiArms(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = rig_name
+    bl_order = 1
 
     def draw(self, context):
         # Variables and Data
@@ -235,6 +238,7 @@ class SEDAIA_PT_uiLegs(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = rig_name
+    bl_order = 2
 
     def draw(self, context):
         # Variables and Data
@@ -274,6 +278,7 @@ class SEDAIA_PT_uiFace(T.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_idname = "SEDAIA_PT_uiFace"
+    bl_order = 1
 
     @classmethod
     def poll(self, context):
@@ -317,6 +322,7 @@ class SEDAIA_PT_uiEyebrows(T.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_parent_id = "SEDAIA_PT_uiFace"
+    bl_order = 0
 
     @classmethod
     def poll(self, context):
@@ -366,6 +372,7 @@ class SEDAIA_PT_uiEyes(T.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_parent_id = "SEDAIA_PT_uiFace"
+    bl_order = 1
 
     @classmethod
     def poll(self, context):
@@ -428,6 +435,7 @@ class SEDAIA_PT_uiMouth(T.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_parent_id = "SEDAIA_PT_uiFace"
+    bl_order = 2
 
     @classmethod
     def poll(self, context):
