@@ -5,3 +5,5 @@
 /Dev_Rig
 /Individual Addons/SACR_GUI_V1/__pycache__
 /Individual Addons/SACR_GUI_V2/__pycache__
+*.pyc
+/addon/__pycache__

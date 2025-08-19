@@ -18,7 +18,7 @@ D = bpy.data
 T = bpy.types
 
 class SEDAIA_PT_rig_manager(Panel):
-    bl_idname = "SEDAIA_PT_rig_manager"
+    bl_parent_id = "SEDAIA_PT_utils"
     bl_label = "Rig Manager"
     bl_category = "Sakura Rigs"
     bl_space_type = 'VIEW_3D'
@@ -27,3 +27,4 @@ class SEDAIA_PT_rig_manager(Panel):
     def draw(self, context):
         layout = self.layout
         layout.label(text="TO BE MADE")
+        
