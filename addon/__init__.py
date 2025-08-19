@@ -10,24 +10,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-import bpy
-import sys
-sys.path.append("..")
 
-from sacr_gui_v1 import SACRUI_PT_template
+from . import auto_load
 
-classes = [
-    SACRUI_PT_template
-]
+auto_load.init()
 
-def register(): 
-    for cls in classes:
-        bpy.utils.register_class(cls)
-    
-def unregister(): 
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
-        
-if __name__ == '__main__':
-    register()
-    
+def register():
+    auto_load.register()
+
+def unregister():
+    auto_load.unregister()

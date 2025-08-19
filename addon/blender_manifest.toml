@@ -1,17 +1,15 @@
 schema_version = "1.0.0"
 
-# Example of manifest file for a Blender extension
-# Change the values according to your extension
-id = "SACR_CI"
-version = "0.1.0"
-name = "SACR Control Interface"
-tagline = "An Addon containing control scripts for SACR"
+id = "Sakura_Rig_GUI"
+version = "2.0.0"
+name = "Sakura Rig GUI"
+tagline = "A control script for use with Sakura's Character Rigs"
 maintainer = "Sakura Sedaia"
 # Supported types: "add-on", "theme"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc
-website = "https://github.com/SakuraSedaia/SACR-Control-Interface"
+website = "https://sakura-sedaia.com/rigs.html"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
@@ -28,9 +26,10 @@ license = [
   "SPDX:GPL-3.0-or-later",
 ]
 # # Optional: required by some licenses.
-copyright = [
-  "2024-2025 Sakura Sedaia",
-]
+# copyright = [
+#   "2002-2024 Developer Name",
+#   "1998 Company Name",
+# ]
 
 # # Optional: list of supported platforms. If omitted, the extension will be available in all operating systems.
 # platforms = ["windows-x64", "macos-arm64", "linux-x64"]

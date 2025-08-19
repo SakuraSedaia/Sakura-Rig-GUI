@@ -12,19 +12,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-bl_info = {
-    "name"          : "SACR R8 Control Interface",
-    "author"        : "Sakura Sedaia",
-    "version"       : (0, 0, 1),
-    "blender"       : (4, 5, 0),
-    "location"      : "3D View > SACR UI",
-    "description"   : "An Addon containing control scripts for SACR R7.2 and newer",
-    "warning"       : "This Addon is still heavily in development, please expect issues to be present",
-    "doc_url"       : "",
-    "tracker_url"   : "",
-    'support'       : "COMMUNITY",
-    "category"      : "User Interface"
-}
+
 import bpy
 
 """ This Script is for use with SACR R8 """
@@ -217,7 +205,6 @@ class SACRUI_PT_bone_groups(T.Panel):
         # ==============
         face_toggle = gProp["Toggle_Face"]
         
-        
         # ============== 
         # Bone Collections Variables
         # ==============
@@ -362,6 +349,7 @@ class SACRUI_PT_properties(T.Panel):
         
         scene = context.scene
         renConfig = T.RenderSettings
+        scene_cfg = T.Render
         
         gProp = rig.pose.bones['Rig_Properties']
         dProp = rig.pose.bones['Deform_Controls']
@@ -717,24 +705,16 @@ class SACRUI_PT_properties(T.Panel):
 # Register Classes
 # ==============
 
-classes = [
+module_list = (
     SACRUI_PT_rig_info,
-    SACRUI_PT_bone_groups,
-    SACRUI_PT_properties
-]
+    SACRUI_PT_properties,
+    SACRUI_PT_bone_groups
+)
 
-def register(): 
-    for cls in classes:
-        bpy.utils.register_class(cls)
-    
-    
-    
-def unregister(): 
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
+def register(bl_info):
+    for mod in module_list:
+        mod.register()
         
-        
-    
-if __name__ == '__main__':
-    register()
-    
+def unregister(bl_info):
+    for mod in module_list:
+        mod.unregister()
