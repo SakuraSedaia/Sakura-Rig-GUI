@@ -18,3 +18,4 @@ class SEDAIA_OT_import(Operator):
     
 def import_r7(self, rig_preset):
     ...
+    

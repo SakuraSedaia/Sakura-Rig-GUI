@@ -35,3 +35,14 @@ class SEDAIA_PT_Utilities(Panel):
         layout.separator(type="LINE")
         row = layout.row()
         row.prop(scene.unit_settings, 'scale_length')
+        
+class SEDAIA_PT_rig_manager(Panel):
+    bl_parent_id = "SEDAIA_PT_utils"
+    bl_label = "Rig Manager"
+    bl_category = "Sakura Rigs"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="TO BE MADE")
