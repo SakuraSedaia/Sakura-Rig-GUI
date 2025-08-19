@@ -114,7 +114,9 @@ class SEDAIA_PT_uiGlobal(Panel):
             text="Solid Bones",
         )
         col.prop(layers["Flip"], "is_visible", toggle=True, text="Flip Bone")
-        col.prop(layers["Quick Parents"], "is_visible", toggle=True, text="Easy Parenting")
+        col.prop(
+            layers["Quick Parents"], "is_visible", toggle=True, text="Easy Parenting"
+        )
         col.prop(main, '["Face Toggle"]', toggle=True, text="Face Rig")
         if lite == False:
             col.prop(main, '["Long Hair Rig"]', text="Long Hair Rig")
@@ -129,8 +131,7 @@ class SEDAIA_PT_uiGlobal(Panel):
 # endregion
 # region Bone Collections
 
-
-class SEDAIA_PT_uiBoneGroups(Panel):
+class SEDAIA_PT_suiBoneGroups(Panel):
     bl_parent_id = "SEDAIA_PT_uiGlobal"
     bl_label = "Bone Collections"
     bl_space_type = "VIEW_3D"
@@ -180,7 +181,7 @@ class SEDAIA_PT_uiBoneGroups(Panel):
 
 # endregion
 # region Arms
-class SEDAIA_PT_uiArms(Panel):
+class SEDAIA_PT_suiArms(Panel):
     bl_parent_id = "SEDAIA_PT_uiGlobal"
     bl_label = "Arm Settings"
     bl_space_type = "VIEW_3D"
@@ -233,7 +234,7 @@ class SEDAIA_PT_uiArms(Panel):
 
 # endregion
 # region Legs
-class SEDAIA_PT_uiLegs(Panel):
+class SEDAIA_PT_suiLegs(Panel):
     bl_parent_id = "SEDAIA_PT_uiGlobal"
     bl_label = "Leg Settings"
     bl_space_type = "VIEW_3D"
@@ -314,10 +315,14 @@ class SEDAIA_PT_uiFace(T.Panel):
 
         row = layout.row()
         row.prop(face, '["Face | UV"]', toggle=True, text="UV projection")
-        row.prop(main, '["Show Lattices"]', index=1, toggle=True, text="Eyelash Lattice")
+        row.prop(
+            main, '["Show Lattices"]', index=1, toggle=True, text="Eyelash Lattice"
+        )
+
+
 # endregion
 # region Eyebrows
-class SEDAIA_PT_uiEyebrows(T.Panel):
+class SEDAIA_PT_suiEyebrows(T.Panel):
     bl_label = "Eyebrows Settings"
     bl_category = rig_name
     bl_space_type = "VIEW_3D"
@@ -365,9 +370,11 @@ class SEDAIA_PT_uiEyebrows(T.Panel):
         row = box.row(align=True)
         row.prop(eyebrows, '["Extended Controls"]', index=0, text="Left", slider=True)
         row.prop(eyebrows, '["Extended Controls"]', index=1, text="Right", slider=True)
+
+
 # endregion
 # region Eyes
-class SEDAIA_PT_uiEyes(T.Panel):
+class SEDAIA_PT_suiEyes(T.Panel):
     bl_label = "Eyes Settings"
     bl_category = rig_name
     bl_space_type = "VIEW_3D"
@@ -430,7 +437,7 @@ class SEDAIA_PT_uiEyes(T.Panel):
 
 # endregion
 # region Mouth
-class SEDAIA_PT_uiMouth(T.Panel):
+class SEDAIA_PT_suiMouth(T.Panel):
     bl_label = "Mouth Settings"
     bl_category = rig_name
     bl_space_type = "VIEW_3D"
@@ -502,4 +509,29 @@ class SEDAIA_PT_uiMouth(T.Panel):
         col.label(text="Right Width")
         col.prop(mouth, '["Molar Width (R -> L)"]', index=0, slider=True, text="")
         col.prop(mouth, '["Molar Width (R -> L)"]', index=1, slider=True, text="")
+
+
 # endregion
+
+# Un-comment below for if this script is installed on the rig level
+# =========
+# classes = [
+#     SEDAIA_PT_uiGlobal,
+#     SEDAIA_PT_uiFace,
+#     SEDAIA_PT_suiArms,
+#     SEDAIA_PT_suiLegs,
+#     SEDAIA_PT_suiEyebrows,
+#     SEDAIA_PT_suiEyes,
+#     SEDAIA_PT_suiMouth
+# ]
+#
+# def register():
+#     for cls in classes:
+#         bpy.utils.register_class(cls)
+#
+# def unregister():
+#     for cls in classes:
+#         bpy.utils.unregister_class(cls)
+#
+# if __name__ == '__main__':
+#     register()
