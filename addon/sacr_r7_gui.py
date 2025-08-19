@@ -165,13 +165,13 @@ class SEDAIA_PT_uiArms(Panel):
     row = layout.row(align=True)
     arm = 0
     col = row.column(heading="Left")
-    col.prop(main, '["Arm IK"]', index=arm, text='Enable', slider=True)
+    col.prop(main, '["Arm IK"]', index=arm, text='IK', slider=True)
     col.prop(main, '["Arm Stretch"]', index=arm, text='Stretch', slider=True)
     col.prop(main, '["Arm Wrist IK"]', index=arm, text="Wrist IK", slider=True)
     
     arm = 1
     col = row.column(heading="Right")
-    col.prop(main, '["Arm IK"]', index=arm, text='Enable', slider=True)
+    col.prop(main, '["Arm IK"]', index=arm, text='IK', slider=True)
     col.prop(main, '["Arm Stretch"]', index=arm, text='Stretch', slider=True)
     col.prop(main, '["Arm Wrist IK"]', index=arm, text="Wrist IK", slider=True)
 #endregion
@@ -199,6 +199,19 @@ class SEDAIA_PT_uiLegs(Panel):
 
     face_on = main['Face Toggle']
     lite = armature["lite"]
+    
+    # UI
+    layout = self.layout
+    row = layout.row(align=True)
+    leg = 0
+    col = row.column(heading='Left')
+    col.prop(main, '["Leg FK"]', index=leg, text='FK', slider=True)
+    col.prop(main, '["Leg Stretch"]', index=leg, text='Stretch', slider=True)
+    
+    leg = 1
+    col = row.column(heading='Right')
+    col.prop(main, '["Leg FK"]', index=leg, text='FK', slider=True)
+    col.prop(main, '["Leg Stretch"]', index=leg, text='Stretch', slider=True)
 #endregion
 #region Face
 class SEDAIA_PT_uiFace(T.Panel):

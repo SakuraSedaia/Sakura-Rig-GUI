@@ -1,6 +1,9 @@
 /__pycache__
 /SACR_Control_Interface/__pycache__
 *.blend1
+*.blend
 /Dev_Rig
 *.pyc
 /addon/__pycache__
+addon/archive
+
