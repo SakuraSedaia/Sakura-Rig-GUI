@@ -114,6 +114,7 @@ class SEDAIA_PT_uiGlobal(Panel):
             text="Solid Bones",
         )
         col.prop(layers["Flip"], "is_visible", toggle=True, text="Flip Bone")
+        col.prop(layers["Quick Parents"], "is_visible", toggle=True, text="Easy Parenting")
         col.prop(main, '["Face Toggle"]', toggle=True, text="Face Rig")
         if lite == False:
             col.prop(main, '["Long Hair Rig"]', text="Long Hair Rig")
