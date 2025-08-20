@@ -1,7 +1,6 @@
-/__pycache__
-/SACR_Control_Interface/__pycache__
-/old_docs
-*.blend1
+*/__pycache__
+*.blend*
 /Dev_Rig
-/Individual Addons/SACR_GUI_V1/__pycache__
-*.code-workspace
+*.pyc
+addon/archive
+notes.txt
