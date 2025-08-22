@@ -42,8 +42,8 @@ P = bpy.props
 
 
 # region Main Panel
-class SEDAIA_PT_uiGlobal(Panel):
-    bl_idname = "SEDAIA_PT_uiGlobal"
+class SEDAIA_PT_sacr_7_uiGlobal(Panel):
+    bl_idname = "SEDAIA_PT_sacr_7_uiGlobal"
     bl_label = "SACR Properties"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -133,8 +133,8 @@ class SEDAIA_PT_uiGlobal(Panel):
 # region Bone Collections
 
 
-class SEDAIA_PT_suiBoneGroups(Panel):
-    bl_parent_id = "SEDAIA_PT_uiGlobal"
+class SEDAIA_PT_sacr_7_suiBoneGroups(Panel):
+    bl_parent_id = "SEDAIA_PT_sacr_7_uiGlobal"
     bl_label = "Bone Collections"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -162,8 +162,8 @@ class SEDAIA_PT_suiBoneGroups(Panel):
 
 # endregion
 # region Arms
-class SEDAIA_PT_suiArms(Panel):
-    bl_parent_id = "SEDAIA_PT_uiGlobal"
+class SEDAIA_PT_sacr_7_suiArms(Panel):
+    bl_parent_id = "SEDAIA_PT_sacr_7_uiGlobal"
     bl_label = "Arm Settings"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -205,8 +205,8 @@ class SEDAIA_PT_suiArms(Panel):
 
 # endregion
 # region Legs
-class SEDAIA_PT_suiLegs(Panel):
-    bl_parent_id = "SEDAIA_PT_uiGlobal"
+class SEDAIA_PT_sacr_7_suiLegs(Panel):
+    bl_parent_id = "SEDAIA_PT_sacr_7_uiGlobal"
     bl_label = "Leg Settings"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -235,12 +235,12 @@ class SEDAIA_PT_suiLegs(Panel):
 
 # endregion
 # region Face
-class SEDAIA_PT_uiFace(T.Panel):
+class SEDAIA_PT_sacr_7_uiFace(T.Panel):
     bl_label = "SACR Facerig"
     bl_category = category
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_idname = "SEDAIA_PT_uiFace"
+    bl_idname = "SEDAIA_PT_sacr_7_uiFace"
     bl_order = 1
 
     @classmethod
@@ -281,12 +281,12 @@ class SEDAIA_PT_uiFace(T.Panel):
 
 # endregion
 # region Eyebrows
-class SEDAIA_PT_suiEyebrows(T.Panel):
+class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
     bl_label = "Eyebrows Settings"
     bl_category = category
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_parent_id = "SEDAIA_PT_uiFace"
+    bl_parent_id = "SEDAIA_PT_sacr_7_uiFace"
     bl_order = 0
 
     @classmethod
@@ -325,12 +325,12 @@ class SEDAIA_PT_suiEyebrows(T.Panel):
 
 # endregion
 # region Eyes
-class SEDAIA_PT_suiEyes(T.Panel):
+class SEDAIA_PT_sacr_7_suiEyes(T.Panel):
     bl_label = "Eyes Settings"
     bl_category = category
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_parent_id = "SEDAIA_PT_uiFace"
+    bl_parent_id = "SEDAIA_PT_sacr_7_uiFace"
     bl_order = 1
 
     @classmethod
@@ -384,12 +384,12 @@ class SEDAIA_PT_suiEyes(T.Panel):
 
 # endregion
 # region Mouth
-class SEDAIA_PT_suiMouth(T.Panel):
+class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
     bl_label = "Mouth Settings"
     bl_category = category
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_parent_id = "SEDAIA_PT_uiFace"
+    bl_parent_id = "SEDAIA_PT_sacr_7_uiFace"
     bl_order = 2
 
     @classmethod
@@ -468,13 +468,13 @@ class SEDAIA_PT_suiMouth(T.Panel):
 # Un-comment below for if this script is installed on the rig level
 # =========
 # classes = [
-#     SEDAIA_PT_uiGlobal,
-#     SEDAIA_PT_uiFace,
-#     SEDAIA_PT_suiArms,
-#     SEDAIA_PT_suiLegs,
-#     SEDAIA_PT_suiEyebrows,
-#     SEDAIA_PT_suiEyes,
-#     SEDAIA_PT_suiMouth
+#     SEDAIA_PT_sacr_7_uiGlobal,
+#     SEDAIA_PT_sacr_7_uiFace,
+#     SEDAIA_PT_sacr_7_suiArms,
+#     SEDAIA_PT_sacr_7_suiLegs,
+#     SEDAIA_PT_sacr_7_suiEyebrows,
+#     SEDAIA_PT_sacr_7_suiEyes,
+#     SEDAIA_PT_sacr_7_suiMouth
 # ]
 #
 # def register():
