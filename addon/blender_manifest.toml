@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "Sakura_Rig_GUI"
-version = "1.1.0"
+version = "1.2.0"
 name = "Sakura Rig GUI"
 tagline = "A control script for use with Sakura's Character Rigs"
 maintainer = "Sakura Sedaia"
@@ -11,7 +11,7 @@ maintainer = "Sakura Sedaia"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc
-website = "https://sakura-sedaia.com/rigs.html"
+website = "https://sakura-sedaia.com/sakura-rig-gui"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
