@@ -2,5 +2,4 @@
 *.blend*
 /Dev_Rig
 *.pyc
-addon/archive
-notes.txt
+*.hidden
