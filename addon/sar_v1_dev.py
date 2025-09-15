@@ -29,8 +29,7 @@ class SEDAIA_PT_sar_1_uiGlobal(Panel):
         try:
             obj = context.active_object
             if obj and obj.type == "ARMATURE" and obj.data:
-                armature = obj.data
-                return armature[rig_id_prop] == rig_id_prop
+                return obj.data[rig_id_prop] == rig_id_prop
             else:
                 return False
         except (AttributeError, KeyError, TypeError):
@@ -120,8 +119,7 @@ class SEDAIA_PT_sar_1_suiBoneGroups(Panel):
         try:
             obj = context.active_object
             if obj and obj.type == "ARMATURE" and obj.data:
-                armature = obj.data
-                return armature[id_prop] == id_str[0] or id_str[1]
+                return obj.data[rig_id_prop] == rig_id_prop
             else:
                 return False
         except (AttributeError, KeyError, TypeError):
@@ -227,7 +225,7 @@ class SEDAIA_PT_sar_1_uiFace(T.Panel):
             face_on = main["Face Toggle"]
             if face_on == True:
                 if obj and obj.type == "ARMATURE" and obj.data:
-                    return obj.data[id_prop] == id_str[0] or id_str[1]
+                    return obj.data[rig_id_prop] == rig_id_prop
                 else:
                     return False
             else:
