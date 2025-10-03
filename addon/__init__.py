@@ -30,8 +30,8 @@ rig_ver = 7
 category = f"{rig} GUI"
 id_prop = "sacr_id"
 id_str = [
-    "SACR.Rev_7",  # SACR R7.3 and Newer
-    "sacr_1",  # SACR R7.2.1 and older
+    "SACR.Rev_7",
+    "sacr_1",
 ]
 mesh_mat_obj = "MaterialEditor"
 D = bpy.data
@@ -57,7 +57,6 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
         except (AttributeError, KeyError, TypeError):
             return False
     def draw(self, context):
-        # Variables and Data
         obj = context.active_object
         armature = obj.data
         bone = obj.pose.bones
@@ -72,18 +71,16 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
         except (AttributeError, KeyError, TabError):
             latticeProp = False
         if obj.data[id_prop] == id_str[0]:
-            # Object Name: MaterialEditor
             i = 0
             for l in obj.children:
                 i = i + 1
-                # Find Material Object
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
                     break
             skinMat = matObj.material_slots[0].material.node_tree
             skinImgProp = skinMat.nodes["Rig Texture"].image
         layout = self.layout
-
         row = layout.row()
         row.label(icon="PROPERTIES")
         row.prop(layers["Properties"], "is_visible", text="Bone Props", toggle=True)
@@ -92,7 +89,7 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
             row = layout.row()
             row.label(text="Skin Texture")
             row = layout.row(align=True)
-            row.operator("sedaia_ot.imgpack",icon = "PACKAGE" if is_packed(skinImgProp) else "UGLYPACKAGE").img_name=skinImgProp.name
+            row.operator("sedaia_ot.imgpack", icon = "PACKAGE" if is_packed(skinImgProp) else "UGLYPACKAGE").img_name = skinImgProp.name
             row = row.row(align=True)
             row.enabled = not is_packed(skinImgProp)
             row.prop(skinImgProp, "filepath", text="")
@@ -153,7 +150,6 @@ class SEDAIA_PT_sacr_7_suiBoneGroups(Panel):
         except (AttributeError, KeyError, TypeError):
             return False
     def draw(self, context):
-        # Define UI
         layout = self.layout
         row = layout.row()
         row.template_bone_collection_tree()
@@ -165,7 +161,6 @@ class SEDAIA_PT_sacr_7_suiArms(Panel):
     bl_category = category
     bl_order = 1
     def draw(self, context):
-        # Variables and Data
         obj = context.active_object
         bone = obj.pose.bones
         main = bone["Rig_Properties"]
@@ -196,7 +191,6 @@ class SEDAIA_PT_sacr_7_suiLegs(Panel):
     bl_category = category
     bl_order = 2
     def draw(self, context):
-        # Variables and Data
         obj = context.active_object
         bone = obj.pose.bones
         main = bone["Rig_Properties"]
@@ -271,12 +265,11 @@ class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
         bone = obj.pose.bones
         eyebrows = bone["Eyebrow_Properties"]
         if obj.data[id_prop] == id_str[0]:
-            # Object Name: MaterialEditor
             i = 0
             for l in obj.children:
                 i = i + 1
-                # Find Material Object
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
                     break
             eyebrowMat = matObj.material_slots[6].material.node_tree.nodes['Node']
@@ -351,8 +344,8 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
             i = 0
             for l in obj.children:
                 i = i + 1
-                # Find Material Object
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
                     break
             lashMat = matObj.material_slots[7].material.node_tree.nodes['Group']
@@ -406,7 +399,8 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
         i = 0
         for l in obj.children:
             i = i + 1
-            if l.name == mesh_mat_obj:
+            objName = l.name.split(".")[0]
+            if objName == mesh_mat_obj:
                 matObj = l
                 break
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
@@ -491,8 +485,8 @@ class SEDAIA_PT_sacr_7_muiPupil(Panel):
         i = 0
         for l in obj.children:
             i = i + 1
-            # Find Material Object
-            if l.name == mesh_mat_obj:
+            objName = l.name.split(".")[0]
+            if objName == mesh_mat_obj:
                 matObj = l
                 break
             
@@ -553,7 +547,8 @@ class SEDAIA_PT_sacr_7_muiSclera(Panel):
         i = 0
         for l in obj.children:
             i = i + 1
-            if l.name == mesh_mat_obj:
+            objName = l.name.split(".")[0]
+            if objName == mesh_mat_obj:
                 matObj = l
                 break
         scleraMat = matObj.material_slots[2].material.node_tree.nodes['Node']
@@ -639,7 +634,8 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
             i = 0
             for l in obj.children:
                 i = i + 1
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
                     break
             backMat = matObj.material_slots[3].material.node_tree.nodes["Group.001"]
@@ -728,7 +724,9 @@ classes = [
     SEDAIA_PT_sacr_7_suiLegs,
     SEDAIA_PT_sacr_7_suiEyebrows,
     SEDAIA_PT_sacr_7_suiEyes,
-    SEDAIA_PT_sacr_7_suiMouth
+    SEDAIA_PT_sacr_7_suiMouth,
+    SEDAIA_OT_ImgPack,
+    SEDAIA_OT_ImgReload
 ]
 def register():
     for cls in classes:
