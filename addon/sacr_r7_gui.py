@@ -35,6 +35,7 @@ id_str = [
     "SACR.Rev_7",  # SACR R7.3 and Newer
     "sacr_1",  # SACR R7.2.1 and older
 ]
+mesh_mat_obj = "MaterialEditor"
 
 D = bpy.data
 C = bpy.context
@@ -85,7 +86,14 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
             
             
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+            # Object Name: MaterialEditor
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                # Find Material Object
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break
             skinMat = matObj.material_slots[0].material.node_tree
             skinImgProp = skinMat.nodes["Rig Texture"].image
         
@@ -340,7 +348,14 @@ class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
         
         
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+            # Object Name: MaterialEditor
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                # Find Material Object
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break
             
             eyebrowMat = matObj.material_slots[6].material.node_tree.nodes['Node']
             eyebrowGrad = eyebrowMat.inputs['Gradient'].default_value
@@ -436,7 +451,14 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
         
         # Face Material Objs
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+            # Object Name: MaterialEditor
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                # Find Material Object
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break
             irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
             scleraMat = matObj.material_slots[2].material.node_tree.nodes['Node']
             lashMat = matObj.material_slots[7].material.node_tree.nodes['Group']
@@ -506,7 +528,14 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
     def draw(self, context):
         obj = context.active_object
         
-        matObj = obj.children[8] # Object Name: MaterialEditor
+        # Object Name: MaterialEditor
+        i = 0
+        for l in obj.children:
+            i = i + 1
+            # Find Material Object
+            if l.name == mesh_mat_obj:
+                matObj = l
+                break
             
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
         
@@ -609,10 +638,14 @@ class SEDAIA_PT_sacr_7_muiPupil(Panel):
     def draw(self, context):
         obj = context.active_object
         
-        if obj.data[id_prop] == id_str[1]:
-            matObj = obj.children[14] # Object Name: MaterialEditor
-        else:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+        # Object Name: MaterialEditor
+        i = 0
+        for l in obj.children:
+            i = i + 1
+            # Find Material Object
+            if l.name == mesh_mat_obj:
+                matObj = l
+                break
             
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
         irisImgProp = matObj.material_slots[1].material.node_tree.nodes["Image Texture.001"].image
@@ -684,10 +717,14 @@ class SEDAIA_PT_sacr_7_muiSclera(Panel):
     def draw(self, context):
         obj = context.active_object
         
-        if obj.data[id_prop] == id_str[1]:
-            matObj = obj.children[14] # Object Name: MaterialEditor
-        else:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+        # Object Name: MaterialEditor
+        i = 0
+        for l in obj.children:
+            i = i + 1
+            # Find Material Object
+            if l.name == mesh_mat_obj:
+                matObj = l
+                break
         
         scleraMat = matObj.material_slots[2].material.node_tree.nodes['Node']
         
@@ -791,7 +828,14 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
         mouth = bone["Mouth_Properties"]
         
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+            # Object Name: MaterialEditor
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                # Find Material Object
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break # Object Name: MaterialEditor
                 
             backMat = matObj.material_slots[3].material.node_tree.nodes["Group.001"]
             teethMat = matObj.material_slots[4].material.node_tree.nodes["Group"]
@@ -893,10 +937,6 @@ class SEDAIA_OT_ImgReload(Operator):
     def execute(self,context):
         bpy.data.images(self.img_name).reload()
         return{"FINISHED"}
-    
-
-    
-    
 #endregion
 #region Register
 
