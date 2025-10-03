@@ -13,7 +13,7 @@
 bl_info = {
     "name": "SACR R7 GUI",
     "author": "Sakura Sedaia",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (4, 5, 0),
     "location": "3D View > SACR UI",
     "description": "An Addon containing control scripts for SACR R7",
@@ -23,10 +23,8 @@ bl_info = {
     "support": "COMMUNITY",
     "category": "User Interface",
 }
-
 import bpy
 from bpy.types import Panel, Operator
-
 rig = "SACR"
 rig_ver = 7
 category = f"{rig} GUI"
@@ -35,6 +33,7 @@ id_str = [
     "SACR.Rev_7",  # SACR R7.3 and Newer
     "sacr_1",  # SACR R7.2.1 and older
 ]
+mesh_mat_obj = "MaterialEditor"
 D = bpy.data
 C = bpy.context
 T = bpy.types
@@ -73,10 +72,18 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
         except (AttributeError, KeyError, TabError):
             latticeProp = False
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+            # Object Name: MaterialEditor
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                # Find Material Object
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break
             skinMat = matObj.material_slots[0].material.node_tree
             skinImgProp = skinMat.nodes["Rig Texture"].image
         layout = self.layout
+
         row = layout.row()
         row.label(icon="PROPERTIES")
         row.prop(layers["Properties"], "is_visible", text="Bone Props", toggle=True)
@@ -158,6 +165,7 @@ class SEDAIA_PT_sacr_7_suiArms(Panel):
     bl_category = category
     bl_order = 1
     def draw(self, context):
+        # Variables and Data
         obj = context.active_object
         bone = obj.pose.bones
         main = bone["Rig_Properties"]
@@ -188,6 +196,7 @@ class SEDAIA_PT_sacr_7_suiLegs(Panel):
     bl_category = category
     bl_order = 2
     def draw(self, context):
+        # Variables and Data
         obj = context.active_object
         bone = obj.pose.bones
         main = bone["Rig_Properties"]
@@ -213,7 +222,6 @@ class SEDAIA_PT_sacr_7_uiFace(T.Panel):
         try:
             obj = context.active_object
             bone = obj.pose.bones
-
             main = bone["Rig_Properties"]
             face_on = main["Face Toggle"]
             if face_on == True:
@@ -263,7 +271,14 @@ class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
         bone = obj.pose.bones
         eyebrows = bone["Eyebrow_Properties"]
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8]
+            # Object Name: MaterialEditor
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                # Find Material Object
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break
             eyebrowMat = matObj.material_slots[6].material.node_tree.nodes['Node']
             eyebrowGrad = eyebrowMat.inputs['Gradient'].default_value
             eyebrowSplit = eyebrowMat.inputs['Split Color'].default_value
@@ -315,7 +330,6 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
         except (AttributeError, KeyError, TypeError):
             return False
     def draw(self, context):
-        # Variables and Data
         obj = context.active_object
         armature = obj.data
         bone = obj.pose.bones
@@ -334,7 +348,13 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
         else:
             lashTog = False
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8]
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                # Find Material Object
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break
             lashMat = matObj.material_slots[7].material.node_tree.nodes['Group']
             sparkleMat = matObj.material_slots[5].material.node_tree.nodes['Emission']
         layout = self.layout
@@ -383,7 +403,12 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
             return False
     def draw(self, context):
         obj = context.active_object
-        matObj = obj.children[8]
+        i = 0
+        for l in obj.children:
+            i = i + 1
+            if l.name == mesh_mat_obj:
+                matObj = l
+                break
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
         irisGrad = irisMat.inputs['Gradient'].default_value
         irisSplit = irisMat.inputs['Heterochromia'].default_value
@@ -442,7 +467,7 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
                 col = row.column(align=True, heading="Right")
                 col.prop(irisMat.inputs['RT'], 'default_value', text="R Top")
                 if emitGrad is True:
-                    col.prop(irisMat.inputs['RB'], 'default_value', text="R Bottom")   
+                    col.prop(irisMat.inputs['RB'], 'default_value', text="R Bottom")
 class SEDAIA_PT_sacr_7_muiPupil(Panel):
     bl_label = "Pupil Material"
     bl_category = category
@@ -463,9 +488,15 @@ class SEDAIA_PT_sacr_7_muiPupil(Panel):
             return False
     def draw(self, context):
         obj = context.active_object
-        matObj = obj.children[8]
+        i = 0
+        for l in obj.children:
+            i = i + 1
+            # Find Material Object
+            if l.name == mesh_mat_obj:
+                matObj = l
+                break
+            
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
-        irisImgProp = matObj.material_slots[1].material.node_tree.nodes["Image Texture.001"].image
         layout = self.layout
         row = layout.row()
         row.label(text="Colors", icon="SHADING_RENDERED")
@@ -519,7 +550,12 @@ class SEDAIA_PT_sacr_7_muiSclera(Panel):
             return False
     def draw(self, context):
         obj = context.active_object
-        matObj = obj.children[8] # Object Name: MaterialEditor
+        i = 0
+        for l in obj.children:
+            i = i + 1
+            if l.name == mesh_mat_obj:
+                matObj = l
+                break
         scleraMat = matObj.material_slots[2].material.node_tree.nodes['Node']
         scleraGrad = scleraMat.inputs['Gradient'].default_value
         scleraSplit = scleraMat.inputs['Heterochromia'].default_value
@@ -600,7 +636,12 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
         bone = obj.pose.bones
         mouth = bone["Mouth_Properties"]
         if obj.data[id_prop] == id_str[0]:
-            matObj = obj.children[8] # Object Name: MaterialEditor
+            i = 0
+            for l in obj.children:
+                i = i + 1
+                if l.name == mesh_mat_obj:
+                    matObj = l
+                    break
             backMat = matObj.material_slots[3].material.node_tree.nodes["Group.001"]
             teethMat = matObj.material_slots[4].material.node_tree.nodes["Group"]
         layout = self.layout
@@ -616,6 +657,7 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
             mouth["Molar Height (R -> L)"]
         except (AttributeError, KeyError, TypeError):
             classic_molar = True
+
         if classic_molar is True:
             col.prop(
                 mouth, '["Fangs Controller"]', toggle=True, text="Molar/Fang Controls"
@@ -686,12 +728,7 @@ classes = [
     SEDAIA_PT_sacr_7_suiLegs,
     SEDAIA_PT_sacr_7_suiEyebrows,
     SEDAIA_PT_sacr_7_suiEyes,
-    SEDAIA_PT_sacr_7_suiMouth,
-    SEDAIA_PT_sacr_7_muiIrises,
-    SEDAIA_PT_sacr_7_muiPupil,
-    SEDAIA_PT_sacr_7_muiSclera,
-    SEDAIA_OT_ImgPack,
-    SEDAIA_OT_ImgReload,
+    SEDAIA_PT_sacr_7_suiMouth
 ]
 def register():
     for cls in classes:
