@@ -91,7 +91,8 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
             for l in obj.children:
                 i = i + 1
                 # Find Material Object
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
                     break
             skinMat = matObj.material_slots[0].material.node_tree
@@ -352,8 +353,8 @@ class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
             i = 0
             for l in obj.children:
                 i = i + 1
-                # Find Material Object
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
                     break
             
@@ -451,12 +452,11 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
         
         # Face Material Objs
         if obj.data[id_prop] == id_str[0]:
-            # Object Name: MaterialEditor
             i = 0
             for l in obj.children:
                 i = i + 1
-                # Find Material Object
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
                     break
             irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
@@ -532,8 +532,8 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
         i = 0
         for l in obj.children:
             i = i + 1
-            # Find Material Object
-            if l.name == mesh_mat_obj:
+            objName = l.name.split(".")[0]
+            if objName == mesh_mat_obj:
                 matObj = l
                 break
             
@@ -637,13 +637,11 @@ class SEDAIA_PT_sacr_7_muiPupil(Panel):
         
     def draw(self, context):
         obj = context.active_object
-        
-        # Object Name: MaterialEditor
         i = 0
         for l in obj.children:
             i = i + 1
-            # Find Material Object
-            if l.name == mesh_mat_obj:
+            objName = l.name.split(".")[0]
+            if objName == mesh_mat_obj:
                 matObj = l
                 break
             
@@ -721,8 +719,8 @@ class SEDAIA_PT_sacr_7_muiSclera(Panel):
         i = 0
         for l in obj.children:
             i = i + 1
-            # Find Material Object
-            if l.name == mesh_mat_obj:
+            objName = l.name.split(".")[0]
+            if objName == mesh_mat_obj:
                 matObj = l
                 break
         
@@ -832,10 +830,10 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
             i = 0
             for l in obj.children:
                 i = i + 1
-                # Find Material Object
-                if l.name == mesh_mat_obj:
+                objName = l.name.split(".")[0]
+                if objName == mesh_mat_obj:
                     matObj = l
-                    break # Object Name: MaterialEditor
+                    break 
                 
             backMat = matObj.material_slots[3].material.node_tree.nodes["Group.001"]
             teethMat = matObj.material_slots[4].material.node_tree.nodes["Group"]
