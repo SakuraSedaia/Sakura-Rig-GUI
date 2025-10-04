@@ -56,10 +56,10 @@ license = [
 # # Keep this a single short sentence without a period (.) at the end.
 # # For longer explanations use the documentation or detail page.
 #
-[permissions]
-network = "Used to download rigs from Sakura's Github"
-files = "Import/export FBX from/to disk"
-clipboard = "Copy and paste bone transforms"
+# [permissions]
+# network = "Used to download rigs from Sakura's Github"
+# files = "Import/export FBX from/to disk"
+# clipboard = "Copy and paste bone transforms"
 
 # # Optional: advanced build settings.
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/command_line_arguments.html#command-line-args-extension-build

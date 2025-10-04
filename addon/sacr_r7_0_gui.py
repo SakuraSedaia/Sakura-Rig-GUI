@@ -26,6 +26,7 @@ bl_info = {
 
 import bpy
 from bpy.types import Panel, Operator
+from .sedaia_operators import is_packed
 
 rig = "SACR"
 rig_ver = 7
@@ -900,65 +901,25 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
             )
 #endregion
 
-#region Operators
-# Img Operators
-def is_packed(img):
-    try:
-        return img.packed_files.values() != []
-    except:
-        return False
-    
-class SEDAIA_OT_ImgPack(Operator):
-    bl_idname = "sedaia_ot.imgpack"
-    bl_label = ""
-    
-    img_name : P.StringProperty()
-    
-    def execute(self, context):
-        img = bpy.data.images[self.img_name]
-        if is_packed(img):
-            if bpy.data.is_saved:
-                img.unpack()
-                
-            else:
-                img.unpack(method="USE_LOCAL")
-        else:
-            img.pack()
-        return{"FINISHED"}
-    
-class SEDAIA_OT_ImgReload(Operator):
-    bl_idname = "sedaia_ot.imgreload"
-    bl_label = ""
-    
-    img_name : P.StringProperty()
-    
-    def execute(self,context):
-        bpy.data.images(self.img_name).reload()
-        return{"FINISHED"}
-#endregion
 #region Register
 
 # Un-comment below for if this script is installed on the rig level
 # =========
-# classes = [
-#     SEDAIA_PT_sacr_7_uiGlobal,
-#     SEDAIA_PT_sacr_7_uiFace,
-#     SEDAIA_PT_sacr_7_suiArms,
-#     SEDAIA_PT_sacr_7_suiLegs,
-#     SEDAIA_PT_sacr_7_suiEyebrows,
-#     SEDAIA_PT_sacr_7_suiEyes,
-#     SEDAIA_PT_sacr_7_suiMouth
-# ]
-#
-# def register():
-#     for cls in classes:
-#         bpy.utils.register_class(cls)
-#
-# def unregister():
-#     for cls in classes:
-#         bpy.utils.unregister_class(cls)
-#
-# if __name__ == '__main__':
-#     register()
+r7_classes = [
+    SEDAIA_PT_sacr_7_uiGlobal,
+    SEDAIA_PT_sacr_7_uiFace,
+    SEDAIA_PT_sacr_7_suiArms,
+    SEDAIA_PT_sacr_7_suiLegs,
+    SEDAIA_PT_sacr_7_suiEyebrows,
+    SEDAIA_PT_sacr_7_suiEyes,
+    SEDAIA_PT_sacr_7_suiMouth
+]
+
+def register():
+    for cls in r7_classes:
+        bpy.utils.register_class(cls)
+def unregister():
+    for cls in r7_classes:
+        bpy.utils.unregister_class(cls)
 
 #endregion

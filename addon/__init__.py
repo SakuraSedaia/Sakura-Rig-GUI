@@ -1,22 +1,32 @@
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+bl_info = {
+    "name": "SACR R7 GUI",
+    "author": "Sakura Sedaia",
+    "version": (1, 2, 0),
+    "blender": (4, 5, 0),
+    "location": "3D View > SACR UI",
+    "description": "An Addon containing control scripts for SACR R7",
+    "warning": "This Addon is still heavily in development, please expect issues to be present",
+    "doc_url": "",
+    "tracker_url": "",
+    "support": "COMMUNITY",
+    "category": "User Interface",
+}
 
-from . import auto_load
 
-auto_load.init()
+from . import (sedaia_operators, sacr_r7_0_gui, sacr_r8_0_gui)
+
+modules = [sedaia_operators, sacr_r7_0_gui, sacr_r8_0_gui]
+
 
 def register():
-    auto_load.register()
+    for mod in modules:
+        mod.register()
+
 
 def unregister():
-    auto_load.unregister()
+    for mod in modules:
+        mod.unregister()
+
+
+if __name__ == "__main__":
+    register()
