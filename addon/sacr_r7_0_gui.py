@@ -1,15 +1,3 @@
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
 bl_info = {
     "name": "SACR R7 GUI",
     "author": "Sakura Sedaia",
@@ -30,7 +18,7 @@ from .sedaia_operators import is_packed
 
 rig = "SACR"
 rig_ver = 7
-category = f"{rig} GUI"
+category = f"{rig} R{rig_ver}"
 id_prop = "sacr_id"
 id_str = [
     "SACR.Rev_7",  # SACR R7.3 and Newer
@@ -905,7 +893,7 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
 
 # Un-comment below for if this script is installed on the rig level
 # =========
-r7_classes = [
+classes = [
     SEDAIA_PT_sacr_7_uiGlobal,
     SEDAIA_PT_sacr_7_uiFace,
     SEDAIA_PT_sacr_7_suiArms,
@@ -916,10 +904,10 @@ r7_classes = [
 ]
 
 def register():
-    for cls in r7_classes:
+    for cls in classes:
         bpy.utils.register_class(cls)
 def unregister():
-    for cls in r7_classes:
+    for cls in classes:
         bpy.utils.unregister_class(cls)
 
 #endregion
