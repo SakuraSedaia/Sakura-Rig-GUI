@@ -1,23 +1,21 @@
 schema_version = "1.0.0"
 
-# Example of manifest file for a Blender extension
-# Change the values according to your extension
 id = "Sakura_Rig_GUI"
-version = "1.3.0"
+version = "2.0.0"
 name = "Sakura Rig GUI"
-tagline = "A control script for use with Sakura's Character Rigs"
+tagline = "A control script for use with Sakura's Rigs"
 maintainer = "Sakura Sedaia"
 # Supported types: "add-on", "theme"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc
-website = "https://sakura-sedaia.com/sakura-rig-gui"
+website = "https://sakura-sedaia.com/rigs.html"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
 tags = ["Rigging", "User Interface"]
 
-blender_version_min = "4.2.0"
+blender_version_min = "4.5.0"
 # # Optional: Blender version that the extension does not support, earlier versions are supported.
 # # This can be omitted and defined later on the extensions platform if an issue is found.
 # blender_version_max = "5.1.0"
@@ -59,7 +57,7 @@ license = [
 # # For longer explanations use the documentation or detail page.
 #
 # [permissions]
-# network = "Need to sync motion-capture data to server"
+# network = "Used to download rigs from Sakura's Github"
 # files = "Import/export FBX from/to disk"
 # clipboard = "Copy and paste bone transforms"
 
