@@ -3,3 +3,4 @@
 /Dev_Rig
 *.pyc
 *.hidden
+*.build

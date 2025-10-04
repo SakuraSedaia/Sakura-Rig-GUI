@@ -11,11 +11,9 @@ bl_info = {
     "support": "COMMUNITY",
     "category": "User Interface",
 }
-
 import bpy
 from bpy.types import Panel, Operator
 from .sedaia_operators import is_packed
-
 rig = "SACR"
 rig_ver = 7
 category = f"{rig} R{rig_ver}"
@@ -25,13 +23,10 @@ id_str = [
     "sacr_1",  # SACR R7.2.1 and older
 ]
 mesh_mat_obj = "MaterialEditor"
-
 D = bpy.data
 C = bpy.context
 T = bpy.types
 P = bpy.props
-
-
 # region Main Panel
 class SEDAIA_PT_sacr_7_uiGlobal(Panel):
     bl_idname = "SEDAIA_PT_sacr_7_uiGlobal"
@@ -40,7 +35,7 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
     bl_region_type = "UI"
     bl_category = category
     bl_order = 0
-
+    
     @classmethod
     def poll(self, context):
         try:
@@ -52,7 +47,7 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
                 return False
         except (AttributeError, KeyError, TypeError):
             return False
-
+        
     def draw(self, context):
         # Variables and Data
         obj = context.active_object
@@ -71,8 +66,6 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
             latticeProp = armature['Show Lattices']
         except (AttributeError, KeyError, TabError):
             latticeProp = False
-            
-            
             
         if obj.data[id_prop] == id_str[0]:
             # Object Name: MaterialEditor
@@ -154,12 +147,8 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
             col.prop(main, '["Armor Toggle"]', index=1, toggle=True, text="Chestplate")
             col.prop(main, '["Armor Toggle"]', index=2, toggle=True, text="Leggings")
             col.prop(main, '["Armor Toggle"]', index=3, toggle=True, text="Boots")
-
-
 # endregion
 # region Bone Collections
-
-
 class SEDAIA_PT_sacr_7_suiBoneGroups(Panel):
     bl_parent_id = "SEDAIA_PT_sacr_7_uiGlobal"
     bl_label = "Bone Collections"
@@ -184,8 +173,6 @@ class SEDAIA_PT_sacr_7_suiBoneGroups(Panel):
         layout = self.layout
         row = layout.row()
         row.template_bone_collection_tree()
-
-
 # endregion
 # region Arms
 class SEDAIA_PT_sacr_7_suiArms(Panel):
@@ -227,7 +214,6 @@ class SEDAIA_PT_sacr_7_suiArms(Panel):
         col.prop(main, '["Arm IK"]', index=arm, text="IK", slider=True)
         col.prop(main, '["Arm Stretch"]', index=arm, text="Stretch", slider=True)
         col.prop(main, '["Arm Wrist IK"]', index=arm, text="Wrist IK", slider=True)
-
 # endregion
 # region Legs
 class SEDAIA_PT_sacr_7_suiLegs(Panel):
@@ -256,8 +242,6 @@ class SEDAIA_PT_sacr_7_suiLegs(Panel):
         col = row.column(heading="Right")
         col.prop(main, '["Leg FK"]', index=leg, text="FK", slider=True)
         col.prop(main, '["Leg Stretch"]', index=leg, text="Stretch", slider=True)
-
-
 # endregion
 # region Face
 class SEDAIA_PT_sacr_7_uiFace(T.Panel):
@@ -308,8 +292,6 @@ class SEDAIA_PT_sacr_7_uiFace(T.Panel):
             row.prop(
                 main, '["Show Lattices"]', index=1, toggle=True, text="Eyelash Lattice"
             )
-
-
 # endregion
 # region Eyebrows
 class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
@@ -368,7 +350,6 @@ class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
         row.prop(eyebrows, '["Extended Controls"]', index=0, text="Left", slider=False)
         row.prop(eyebrows, '["Extended Controls"]', index=1, text="Right", slider=False)
         
-        
         if obj.data[id_prop] == id_str[0]:
             row = layout.row()
             row.label(text='Eyebrow Colors')
@@ -393,8 +374,6 @@ class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
             
             colRightRow2.enabled = eyebrowSplit and eyebrowGrad
             colRightRow2.prop(eyebrowMat.inputs['R.Color Out'], "default_value", text="")
-
-
 # endregion
 # region Eyes
 class SEDAIA_PT_sacr_7_suiEyes(Panel):
@@ -482,7 +461,6 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
                     rowTog.enabled = eyes['Eyesparkle']
                     rowTog.prop(sparkleMat.inputs[0], 'default_value', text="")
                     
-
         layout.separator(type="LINE")
 
         row = layout.row()
@@ -490,7 +468,6 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
         row = layout.row(align=True)
         row.prop(eyes, '["Extended Controls"]', index=0, text="Left", slider=False)
         row.prop(eyes, '["Extended Controls"]', index=1, text="Right", slider=False)
-        
 #endregion
 #region Irises
 class SEDAIA_PT_sacr_7_muiIrises(Panel):
@@ -527,7 +504,6 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
                 break
             
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
-        
         
         # Material Settings
         irisGrad = irisMat.inputs['Gradient'].default_value
@@ -601,7 +577,6 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
                 col.prop(irisMat.inputs['RT'], 'default_value', text="R Top")
                 if emitGrad is True:
                     col.prop(irisMat.inputs['RB'], 'default_value', text="R Bottom")
-        
 #endregion
 #region Pupils      
 class SEDAIA_PT_sacr_7_muiPupil(Panel):
@@ -678,7 +653,6 @@ class SEDAIA_PT_sacr_7_muiPupil(Panel):
         row = col.row(align=True)
         row.enabled = irisMat.inputs['Emission Mask'].default_value > 0
         row.prop(irisMat.inputs['Emit_Color'], 'default_value', text="")
-        
 #endregion
 #region Sclera
 class SEDAIA_PT_sacr_7_muiSclera(Panel):
@@ -714,7 +688,6 @@ class SEDAIA_PT_sacr_7_muiSclera(Panel):
                 break
         
         scleraMat = matObj.material_slots[2].material.node_tree.nodes['Node']
-        
         
         # Material Settings
         scleraGrad = scleraMat.inputs['Gradient'].default_value
@@ -788,7 +761,6 @@ class SEDAIA_PT_sacr_7_muiSclera(Panel):
                 col.prop(scleraMat.inputs['RT'], 'default_value', text="R Top")
                 if emitGrad is True:
                     col.prop(scleraMat.inputs['RB'], 'default_value', text="R Bottom")
-    
 # endregion
 # region Mouth
 class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
@@ -888,11 +860,7 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
                 mouth, '["Molar Width (R -> L)"]', index=1, slider=True, text=bottom
             )
 #endregion
-
 #region Register
-
-# Un-comment below for if this script is installed on the rig level
-# =========
 classes = [
     SEDAIA_PT_sacr_7_uiGlobal,
     SEDAIA_PT_sacr_7_uiFace,
@@ -909,5 +877,4 @@ def register():
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-
 #endregion
