@@ -1,7 +1,6 @@
 */__pycache__
 *.blend*
-/Dev_Rig
 *.pyc
-addon/archive
+*archive
 notes.txt
-/.hidden
+*.hidden
