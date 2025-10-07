@@ -12,7 +12,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name": "Sakura Rig GUI",
+    "name": "Sakura Rig GUI Experimental",
     "author": "Sakura Sedaia",
     "version": (2, 0, 0, 0),
     "blender": (4, 5, 0),
@@ -25,21 +25,15 @@ bl_info = {
     "category": "User Interface",
 }
 
+from . import (sedaia_operators, global_gui, sacr_r7_0_gui, sacr_r8_0_gui)
 
-from . import (sedaia_operators, sacr_r7_0_gui, sacr_r8_0_gui)
-
-modules = [sedaia_operators, sacr_r7_0_gui, sacr_r8_0_gui]
-
+modules = [sedaia_operators, global_gui, sacr_r7_0_gui, sacr_r8_0_gui]
 
 def register():
     for mod in modules:
         mod.register()
-
-
 def unregister():
     for mod in modules:
         mod.unregister()
-
-
 if __name__ == "__main__":
     register()

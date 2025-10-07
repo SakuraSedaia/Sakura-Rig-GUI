@@ -1,7 +1,7 @@
 bl_info = {
     "name": "SACR R7 GUI",
     "author": "Sakura Sedaia",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (4, 5, 0),
     "location": "3D View > SACR UI",
     "description": "An Addon containing control scripts for SACR R7",

@@ -41,17 +41,7 @@ class SEDAIA_OT_ImgReload(Operator):
         bpy.data.images(self.img_name).reload()
         return{"FINISHED"}
 
-sedaia_ops = [
-    SEDAIA_OT_ImgPack,
-    SEDAIA_OT_ImgReload
-]
-def register():
-    for cls in sedaia_ops:
-        bpy.utils.register_class(cls)
-def unregister():
-    for cls in sedaia_ops:
-        bpy.utils.unregister_class(cls)
-    
+
 class SEDAIA_OT_Append_SACR_7_3_0(Operator):
     bl_idname= "sedaia_ot.append_sacr_7_3_0"
     bl_label = "Append SACR"
@@ -85,3 +75,16 @@ class SEDAIA_OT_Append_SACR_7_3_0(Operator):
             print("Could not Append Rig")
             
         return {'FINISHED'}
+
+sedaia_ops = [
+    SEDAIA_OT_ImgPack,
+    SEDAIA_OT_ImgReload,
+    SEDAIA_OT_Append_SACR_7_3_0
+]
+def register():
+    for cls in sedaia_ops:
+        bpy.utils.register_class(cls)
+def unregister():
+    for cls in sedaia_ops:
+        bpy.utils.unregister_class(cls)
+    

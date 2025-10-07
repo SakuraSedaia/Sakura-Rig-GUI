@@ -1,15 +1,15 @@
 schema_version = "1.0.0"
 
 id = "Sakura_Rig_GUI"
-version = "2.0.0"
-name = "Sakura Rig GUI"
+version = "2.0.1"
+name = "Sakura Rig GUI Experimental"
 tagline = "A control script for use with Sakura's Rigs"
 maintainer = "Sakura Sedaia"
 # Supported types: "add-on", "theme"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc
-website = "https://sakura-sedaia.com/rigs.html"
+website = "https://sakura-sedaia.com/sakura-rig-gui"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
