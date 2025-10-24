@@ -5,3 +5,5 @@
 notes.txt
 *.hidden
 *.build
+*.idea
+Sakura-Rig-GUI.code-workspace
