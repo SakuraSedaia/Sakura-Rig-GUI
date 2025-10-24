@@ -11,6 +11,7 @@ Pth = bpy.path
 A = bpy.app
 P = bpy.props
 
+
 class SEDAIA_PT_Utilities(Panel):
     bl_idname = "SEDAIA_PT_utils"
     bl_label = "Sakura Utils"
@@ -38,4 +39,3 @@ class SEDAIA_PT_rig_manager(Panel):
         row = box.row()
         row.operator("sedaia_ot.append_sacr_7_3_0", text="Base")
         row.operator("sedaia_ot.append_sacr_7_3_0", text="Lite").lite = True
-

@@ -11,6 +11,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from . import (sedaia_operators, global_gui, sacr_r7_0_gui, sacr_r8_0_gui)
 bl_info = {
     "name": "Sakura Rig GUI Experimental",
     "author": "Sakura Sedaia",
@@ -25,15 +26,19 @@ bl_info = {
     "category": "User Interface",
 }
 
-from . import (sedaia_operators, global_gui, sacr_r7_0_gui, sacr_r8_0_gui)
 
 modules = [sedaia_operators, global_gui, sacr_r7_0_gui, sacr_r8_0_gui]
+
 
 def register():
     for mod in modules:
         mod.register()
+
+
 def unregister():
     for mod in modules:
         mod.unregister()
+
+
 if __name__ == "__main__":
     register()

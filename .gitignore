@@ -5,3 +5,5 @@
 *.hidden
 *.build
 *.code-workspace
+*.idea
+*.assets
