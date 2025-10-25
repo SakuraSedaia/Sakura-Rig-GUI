@@ -1,6 +1,7 @@
 import os
 import bpy
 from bpy.types import Operator
+import json
 
 D = bpy.data
 C = bpy.context
@@ -16,7 +17,7 @@ def is_packed(img):
 
 
 class SEDAIA_OT_ImgPack(Operator):
-    bl_idname = "sedaia_ot.imgpack"
+    bl_idname = "sedaia_dev_ot.imgpack"
     bl_label = ""
 
     img_name: P.StringProperty()  # type: ignore
@@ -35,7 +36,7 @@ class SEDAIA_OT_ImgPack(Operator):
 
 
 class SEDAIA_OT_ImgReload(Operator):
-    bl_idname = "sedaia_ot.imgreload"
+    bl_idname = "sedaia_dev_ot.imgreload"
     bl_label = ""
 
     img_name: P.StringProperty()  # type: ignore
@@ -46,7 +47,7 @@ class SEDAIA_OT_ImgReload(Operator):
 
 
 class SEDAIA_OT_Append_SACR_7_3_0(Operator):
-    bl_idname = "sedaia_ot.append_sacr_7_3_0"
+    bl_idname = "sedaia_dev_ot.append_sacr_7_3_0"
     bl_label = "Append SACR"
 
     lite: P.BoolProperty()  # type: ignore
@@ -81,7 +82,7 @@ class SEDAIA_OT_Append_SACR_7_3_0(Operator):
         return {'FINISHED'}
 
 
-sedaia_ops = [
+sedaia_ops_dev = [
     SEDAIA_OT_ImgPack,
     SEDAIA_OT_ImgReload,
     SEDAIA_OT_Append_SACR_7_3_0
@@ -89,10 +90,10 @@ sedaia_ops = [
 
 
 def register():
-    for cls in sedaia_ops:
+    for cls in sedaia_ops_dev:
         bpy.utils.register_class(cls)
 
 
 def unregister():
-    for cls in sedaia_ops:
+    for cls in sedaia_ops_dev:
         bpy.utils.unregister_class(cls)

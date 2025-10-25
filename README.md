@@ -5,6 +5,7 @@ The Rig GUI is a new project by Sakura Sedaia with the goal of enabling easier c
 ## WARNING
 
 This branch cannot be active at the same time as the stable branch due to conflicting classes
+
 ## Instructions
 
 1. Download the Latest release of Sakura's Rig GUI Addon

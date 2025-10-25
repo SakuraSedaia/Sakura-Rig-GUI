@@ -1,8 +1,20 @@
-# region Script Configuration
-# Uncomment  when distributed inside the Addon
-from .sedaia_operators import is_packed
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 import bpy
 from bpy.types import Operator, Panel
+from .sedaiaOpsDev import is_packed
+
 
 bl_info = {
     "name": "SACR R8 GUI",
@@ -17,6 +29,8 @@ bl_info = {
     "support": "COMMUNITY",
     "category": "User Interface",
 }
+
+
 # Scene Scale is 1.7065 for editing the rig
 T = bpy.types
 P = bpy.props
@@ -29,6 +43,12 @@ rig = "SACR"
 rig_ver = 8
 ui_ver = 1
 category = f"{rig} R{rig_ver}"
+dev_mode = True
+
+if dev_mode is True:
+    op_id = "sedaia_dev_ot."
+else:
+    op_id = "sedaia_ot."
 # Default Rig ID: SACR.Rev_8.UI_1
 
 # Here are a list of properties which will be compared
@@ -115,12 +135,12 @@ class SEDAIA_PT_SACR8_ui_global(Panel):
         p_row = panel.row()
         p_row.label(text="Skin Texture")
         i_row = panel.row(align=True)
-        i_row.operator("sedaia_ot.imgpack", icon="PACKAGE" if is_packed(
+        i_row.operator(f"{op_id}imgpack", icon="PACKAGE" if is_packed(
             skinTex) else "UGLYPACKAGE").img_name = skinTex.name
         i_row = i_row.row(align=True)
         i_row.enabled = not is_packed(skinTex)
         i_row.prop(skinTex, "filepath", text="")
-        i_row.operator("sedaia_ot.imgreload", icon="FILE_REFRESH",
+        i_row.operator(f"{op_id}imgreload", icon="FILE_REFRESH",
                        text="").img_name = skinTex.name
 
         p_row = panel.row()
@@ -384,49 +404,6 @@ class SEDAIA_PT_SACR8_sui_legConfig(Panel):
         p_col.prop(legProp, '["AnkleIK"]', slider=True,
                    index=1, text="Ankle IK")
 
-# Inclusion is purely for standalone script use,
-# to disable, comment the associated classes in
-# the "classes" variable at bottom of script,
-# otherwise this UI will reference the addon for
-# this purpose
-
-
-def is_packed(img):
-    try:
-        return img.packed_files.values() != []
-    except:
-        return False
-
-
-class SEDAIA_OT_SACR8_ImgPack(Operator):
-    bl_idname = "sedaia_ot.imgpack"
-    bl_label = ""
-
-    img_name: P.StringProperty()  # type: ignore
-
-    def execute(self, context):
-        img = bpy.data.images[self.img_name]
-        if is_packed(img):
-            if bpy.data.is_saved:
-                img.unpack()
-
-            else:
-                img.unpack(method="USE_LOCAL")
-        else:
-            img.pack()
-        return {"FINISHED"}
-
-
-class SEDAIA_OT_SACR8_ImgReload(Operator):
-    bl_idname = "sedaia_ot.imgreload"
-    bl_label = ""
-
-    img_name: P.StringProperty()  # type: ignore
-
-    def execute(self, context):
-        bpy.data.images(self.img_name).reload()
-        return {"FINISHED"}
-
 
 classes = [
     # Main Panels
@@ -437,11 +414,7 @@ classes = [
     SEDAIA_PT_SACR8_sui_headConfig,
     SEDAIA_PT_SACR8_sui_torsoConfig,
     SEDAIA_PT_SACR8_sui_armConfig,
-    SEDAIA_PT_SACR8_sui_legConfig
-
-    # Operators, Uncomment when distributed as a Standalone Script
-    # SEDAIA_OT_SACR8_ImgPack,
-    # SEDAIA_OT_SACR8_ImgReload
+    SEDAIA_PT_SACR8_sui_legConfig,
 ]
 
 

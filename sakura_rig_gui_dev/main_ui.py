@@ -1,6 +1,6 @@
 import bpy
 from bpy.types import Panel, Operator
-from sedaia_operators import SEDAIA_OT_Append_SACR_7_3_0
+from .sedaiaOpsDev import SEDAIA_OT_Append_SACR_7_3_0
 
 D = bpy.data
 M = bpy.msgbus
@@ -10,6 +10,13 @@ U = bpy.utils
 Pth = bpy.path
 A = bpy.app
 P = bpy.props
+
+dev_mode = True
+
+if dev_mode is True:
+    op_id = "sedaia_dev_ot."
+else:
+    op_id = "sedaia_ot."
 
 
 class SEDAIA_PT_Utilities(Panel):
@@ -37,5 +44,5 @@ class SEDAIA_PT_rig_manager(Panel):
         row = box.row()
         row.label(text="Append SACR R7.3")
         row = box.row()
-        row.operator("sedaia_ot.append_sacr_7_3_0", text="Base")
-        row.operator("sedaia_ot.append_sacr_7_3_0", text="Lite").lite = True
+        row.operator(f"{op_id}append_sacr_7_3_0", text="Base")
+        row.operator(f"{op_id}append_sacr_7_3_0", text="Lite").lite = True
