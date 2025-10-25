@@ -1,19 +1,6 @@
-from .sedaiaOpsDev import is_packed
+from .SedaiaOperators_Dev import is_packed
 from bpy.types import Panel, Operator
 import bpy
-bl_info = {
-    "name": "SACR R7 GUI",
-    "author": "Sakura Sedaia",
-    "version": (1, 3, 0),
-    "blender": (4, 5, 0),
-    "location": "3D View > SACR UI",
-    "description": "An Addon containing control scripts for SACR R7",
-    "warning": "This Addon is still heavily in development, please expect issues to be present",
-    "doc_url": "",
-    "tracker_url": "",
-    "support": "COMMUNITY",
-    "category": "User Interface",
-}
 rig = "SACR"
 rig_ver = 7
 category = f"{rig} R{rig_ver}"

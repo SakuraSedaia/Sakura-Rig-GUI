@@ -1,7 +1,6 @@
 import os
 import bpy
 from bpy.types import Operator
-import json
 
 D = bpy.data
 C = bpy.context
@@ -16,7 +15,7 @@ def is_packed(img):
         return False
 
 
-class SEDAIA_OT_ImgPack(Operator):
+class SEDAIA_DEV_OT_ImgPack(Operator):
     bl_idname = "sedaia_dev_ot.imgpack"
     bl_label = ""
 
@@ -35,7 +34,7 @@ class SEDAIA_OT_ImgPack(Operator):
         return {"FINISHED"}
 
 
-class SEDAIA_OT_ImgReload(Operator):
+class SEDAIA_DEV_OT_ImgReload(Operator):
     bl_idname = "sedaia_dev_ot.imgreload"
     bl_label = ""
 
@@ -46,7 +45,7 @@ class SEDAIA_OT_ImgReload(Operator):
         return {"FINISHED"}
 
 
-class SEDAIA_OT_Append_SACR_7_3_0(Operator):
+class SEDAIA_DEV_OT_Append_SACR_7_3_0(Operator):
     bl_idname = "sedaia_dev_ot.append_sacr_7_3_0"
     bl_label = "Append SACR"
 
@@ -83,9 +82,9 @@ class SEDAIA_OT_Append_SACR_7_3_0(Operator):
 
 
 sedaia_ops_dev = [
-    SEDAIA_OT_ImgPack,
-    SEDAIA_OT_ImgReload,
-    SEDAIA_OT_Append_SACR_7_3_0
+    SEDAIA_DEV_OT_ImgPack,
+    SEDAIA_DEV_OT_ImgReload,
+    SEDAIA_DEV_OT_Append_SACR_7_3_0
 ]
 
 

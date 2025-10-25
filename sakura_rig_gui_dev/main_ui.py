@@ -1,6 +1,6 @@
 import bpy
 from bpy.types import Panel, Operator
-from .sedaiaOpsDev import SEDAIA_OT_Append_SACR_7_3_0
+from .SedaiaOperators_Dev import SEDAIA_OT_Append_SACR_7_3_0
 
 D = bpy.data
 M = bpy.msgbus

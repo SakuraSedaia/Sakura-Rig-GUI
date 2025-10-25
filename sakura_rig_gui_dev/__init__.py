@@ -11,23 +11,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from . import (globalGUI, sacr_gui_r8, sedaiaOpsDev)
-bl_info = {
-    "name": "Sakura Rig GUI Experimental",
-    "author": "Sakura Sedaia",
-    "version": (2, 0, 0, 0),
-    "blender": (4, 5, 0),
-    "location": "3D View > SACR UI",
-    "description": "An Addon containing control scripts for Sakura's Rigs",
-    "warning": "",
-    "doc_url": "",
-    "tracker_url": "",
-    "support": "COMMUNITY",
-    "category": "User Interface",
-}
+from . import (SedaiaOperators_Dev, sacrUI_R8_UI1)
 
-
-modules = [sedaiaOpsDev, sacr_gui_r8]
+modules = [SedaiaOperators_Dev, sacrUI_R8_UI1]
 
 
 def register():

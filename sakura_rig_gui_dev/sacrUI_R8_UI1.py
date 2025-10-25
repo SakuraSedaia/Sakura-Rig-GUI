@@ -13,23 +13,7 @@
 
 import bpy
 from bpy.types import Operator, Panel
-from .sedaiaOpsDev import is_packed
-
-
-bl_info = {
-    "name": "SACR R8 GUI",
-    "author": "Sakura Sedaia",
-    "version": (0, 3, 0),
-    "blender": (4, 5, 0),
-    "location": "3D View > SACR UI",
-    "description": "An Addon containing control scripts for SACR R8.0",
-    "warning": "This Addon is still heavily in development, please expect issues to be present",
-    "doc_url": "",
-    "tracker_url": "",
-    "support": "COMMUNITY",
-    "category": "User Interface",
-}
-
+from .SedaiaOperators_Dev import is_packed
 
 # Scene Scale is 1.7065 for editing the rig
 T = bpy.types
