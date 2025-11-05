@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "Sakura_Rig_GUI"
-version = "2.0.1"
+version = "2.0.2"
 name = "Sakura Rig GUI Experimental"
 tagline = "A control script for use with Sakura's Rigs"
 maintainer = "Sakura Sedaia"
@@ -22,9 +22,7 @@ blender_version_min = "4.5.0"
 
 # License conforming to https://spdx.org/licenses/ (use "SPDX: prefix)
 # https://docs.blender.org/manual/en/dev/advanced/extensions/licenses.html
-license = [
-  "SPDX:GPL-3.0-or-later",
-]
+license = ["SPDX:GPL-3.0-or-later"]
 # # Optional: required by some licenses.
 # copyright = [
 #   "2002-2024 Developer Name",

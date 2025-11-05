@@ -1,9 +1,11 @@
+
+# Generic Folders
+.*
+
+# IDE
 */__pycache__
-*.blend*
-/Dev_Rig
-*.pyc
-*.hidden
-*.build
 *.code-workspace
-*.idea
-*.assets
+
+# Blender Temp Files
+*.blend1
+*.blend2

@@ -12,7 +12,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import bpy
-from bpy.types import Operator, Panel
+from bpy.types import Panel, PoseBone
+from bpy.props import EnumProperty
 from .SedaiaOperators_Dev import is_packed
 
 # Scene Scale is 1.7065 for editing the rig
@@ -27,12 +28,19 @@ rig = "SACR"
 rig_ver = 8
 ui_ver = 1
 category = f"{rig} R{rig_ver}"
-dev_mode = True
 
-if dev_mode is True:
-    op_id = "sedaia_dev_ot."
-else:
-    op_id = "sedaia_ot."
+script_version = "1.0.0 Alpha 1"
+
+
+addon_dir = bpy.utils.extension_path_user(
+    __package__, create=True, path="")
+
+rig_dir = bpy.utils.extension_path_user(
+    __package__, create=True, path="rigs")
+
+player_dir = bpy.utils.extension_path_user(
+    __package__, create=True, path="playerdata")
+
 # Default Rig ID: SACR.Rev_8.UI_1
 
 # Here are a list of properties which will be compared
@@ -47,9 +55,10 @@ prop_bones = [
     "Properties.Head",    # 1
     "Properties.Torso",   # 2
     "Properties.Arms",    # 3
-    "Properties.Legs"     # 4
+    "Properties.Legs",     # 4
+    "Properties.Skin_Grabber"  # 5
 ]
-T.PoseBone.ArmType = P.EnumProperty(
+PoseBone.ArmType = EnumProperty(
     name="Arm Type",
     description="Select your Arm Dimension",
     default="0",
@@ -60,7 +69,7 @@ T.PoseBone.ArmType = P.EnumProperty(
          "Super Slim Arm style are a 3x3 version not available in Minecraft")
     ]
 )
-T.PoseBone.AnkleType = P.EnumProperty(
+PoseBone.AnkleType = EnumProperty(
     name="Ankle Type",
     description="Ankle Type for the Left Leg",
     items=[
@@ -70,7 +79,7 @@ T.PoseBone.AnkleType = P.EnumProperty(
 )
 
 
-class SEDAIA_PT_SACR8_ui_global(Panel):
+class SEDAIA_PT_SACR8_UI1_ui_global(Panel):
     bl_label = "SACR Properties"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -95,6 +104,7 @@ class SEDAIA_PT_SACR8_ui_global(Panel):
         rig = context.active_object
         rig_data = rig.data
         rig_bones = rig.pose.bones
+        rig_bc = rig_data.collections_all
         scene = context.scene
         lite = rig_data["lite"]
 
@@ -111,33 +121,76 @@ class SEDAIA_PT_SACR8_ui_global(Panel):
         skin = mat_obj.material_slots[0].material.node_tree
         skinTex = skin.nodes["Skin Texture"].image
         mainProp = rig_bones[prop_bones[0]]
+        armProp = rig_bones[prop_bones[3]]
+        skinProp = rig_bones[prop_bones[5]]
+
         panel = self.layout
 
         p_row = panel.row()
         p_row.label(text="Utilities")
 
+        p_row = panel.row(align=True)
+        p_row.prop(rig_data, '["Rig Name"]', text="Rig Name")
+        p_row.operator("sedaia_ot.update_rig_name", icon="FILE_REFRESH",
+                       text="").rig_name = rig_data["Rig Name"]
         p_row = panel.row()
         p_row.label(text="Skin Texture")
         i_row = panel.row(align=True)
-        i_row.operator(f"{op_id}imgpack", icon="PACKAGE" if is_packed(
+        i_row.operator("sedaia_ot.imgpack", icon="PACKAGE" if is_packed(
             skinTex) else "UGLYPACKAGE").img_name = skinTex.name
         i_row = i_row.row(align=True)
         i_row.enabled = not is_packed(skinTex)
         i_row.prop(skinTex, "filepath", text="")
-        i_row.operator(f"{op_id}imgreload", icon="FILE_REFRESH",
+        i_row.operator("sedaia_ot.imgreload", icon="FILE_REFRESH",
                        text="").img_name = skinTex.name
 
         p_row = panel.row()
+        p_box = p_row.box()
+        p_box.prop(skinProp, '["toggle_downloader"]',
+                   text="Skin Downloader", toggle=True)
+        if skinProp["toggle_downloader"] is True:
+            b_row = p_box.row()
+            b_row.label(text="Minecraft Username")
 
+            b_row = p_box.row()
+            b_col = b_row.column(align=True)
+            c_row = b_col.row()
+
+            c_row.prop(skinProp, '["username"]', text="")
+            c_row = b_col.row(align=True)
+            c_row.operator("sedaia_ot.change_skin",
+                           icon="URL", text="Change Skin")
+            c_row.operator("sedaia_ot.open_directory",
+                           icon="FILEBROWSER").path = player_dir
+
+            p_box.separator(type="LINE")
+
+            b_row = p_box.row()
+            b_row.label(text="Options")
+
+            b_row = p_box.row()
+            b_col = b_row.column()
+            b_col.prop(
+                skinProp, '["auto_arm_type"]', toggle=False, text="Auto Set Arms")
+
+            b_col.prop(
+                skinProp, '["grab_cape"]', toggle=False, text="Grab Cape")
+
+            b_col.prop(
+                skinProp, '["rig_username_match"]', toggle=False, text="Set Rig Name to Username")
+
+        p_row = panel.row()
         p_col = p_row.column_flow(columns=2, align=True)
         p_col.prop(rig.pose, "use_mirror_x", toggle=True)
         p_col.prop(mainProp, '["Anti-Lag"]', toggle=True)
+        p_col.prop(rig_bc['Properties Legacy'], 'is_visible',
+                   toggle=True, text="Legacy Properties")
 
         panel.separator(type="LINE")
 
 
-class SEDAIA_PT_SACR8_sui_QuickParentCTRL(Panel):
-    bl_parent_id = "SEDAIA_PT_SACR8_ui_global"
+class SEDAIA_PT_SACR8_UI1_sui_QuickParentCTRL(Panel):
+    bl_parent_id = "SEDAIA_PT_SACR8_UI1_ui_global"
     bl_label = "Quick Parent Objects"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -224,8 +277,8 @@ class SEDAIA_PT_SACR8_sui_QuickParentCTRL(Panel):
         d_col.prop(rig_bc["QP.Knee R"], "is_visible", text="Knee", toggle=True)
 
 
-class SEDAIA_PT_SACR8_sui_headConfig(Panel):
-    bl_parent_id = "SEDAIA_PT_SACR8_ui_global"
+class SEDAIA_PT_SACR8_UI1_sui_headConfig(Panel):
+    bl_parent_id = "SEDAIA_PT_SACR8_UI1_ui_global"
     bl_label = "Head"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -237,6 +290,7 @@ class SEDAIA_PT_SACR8_sui_headConfig(Panel):
         rig = context.active_object
         rig_data = rig.data
         rig_bones = rig.pose.bones
+        rig_bc = rig_data.collections_all
 
         mainProp = rig_bones[prop_bones[0]]
         headProp = rig_bones[prop_bones[1]]
@@ -245,18 +299,56 @@ class SEDAIA_PT_SACR8_sui_headConfig(Panel):
         panel = self.layout
 
         p_row = panel.row()
-        p_row.prop(headProp, '["FaceToggle"]', text="Enable Face", toggle=True)
+        p_col = p_row.column_flow(columns=2, align=True)
+        p_col.prop(headProp, '["FaceToggle"]', text="Enable Face", toggle=True)
+        p_col.prop(headProp, '["Neck"]', text="Neck", toggle=True)
+        p_col.prop(headProp, '["FaceUV"]', text="Face Auto-UV", toggle=True)
+        if headProp['Neck']:
+            p_col.prop(headProp, '["Neck Height"]')
 
         p_row = panel.row()
         f_box = p_row.box()
         f_box.enabled = headProp['FaceToggle']
 
         f_row = f_box.row()
-        f_row.label(text="Face Settings")
+        f_row.label(text="Face Controls")
+        if headProp['FaceToggle']:
+            f_row = f_box.row()
+            f_row.label(text="On-Face Controls")
+            f_row = f_box.row()
+            f_col = f_row.column(align=True)
+            fc_row = f_col.row(align=True)
+            fc_row.prop(rig_bc["Left Eye"], 'is_visible',
+                        toggle=True, text="Left Eye")
+
+            fc_row.prop(rig_bc["Right Eye"],
+                        'is_visible', toggle=True, text="Right Eye")
+            fc_row = f_col.row()
+            fc_row.prop(rig_bc["Mouth"],
+                        'is_visible', toggle=True, text="Mouth")
+
+            f_row = f_box.row()
+            f_row.label(text="Extended Controls")
+            f_row = f_box.row()
+            f_col = f_row.column(align=True)
+            fc_row = f_col.row(align=True)
+            fcr_enabler_1 = fc_row.column()
+            fcr_enabler_1.enabled = rig_bc["Left Eye"].is_visible
+            fcr_enabler_1.prop(rig_bc["Left Eye Extended"], 'is_visible',
+                               toggle=True, text="Left Eye")
+            fcr_enabler_2 = fc_row.column()
+            fcr_enabler_2.enabled = rig_bc["Right Eye"].is_visible
+            fcr_enabler_2.prop(rig_bc["Right Eye Extended"],
+                               'is_visible', toggle=True, text="Right Eye")
+            fc_row = f_col.row()
+            fcr_enabler_3 = fc_row.column()
+            fcr_enabler_3.enabled = rig_bc["Mouth"].is_visible
+            fcr_enabler_3.prop(rig_bc["Mouth Extended"],
+                               'is_visible', toggle=True, text="Mouth")
 
 
-class SEDAIA_PT_SACR8_sui_torsoConfig(Panel):
-    bl_parent_id = "SEDAIA_PT_SACR8_ui_global"
+class SEDAIA_PT_SACR8_UI1_sui_torsoConfig(Panel):
+    bl_parent_id = "SEDAIA_PT_SACR8_UI1_ui_global"
     bl_label = "Torso"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -268,6 +360,7 @@ class SEDAIA_PT_SACR8_sui_torsoConfig(Panel):
         rig = context.active_object
         rig_data = rig.data
         rig_bones = rig.pose.bones
+        rig_bc = rig_data.collections_all
 
         mainProp = rig_bones[prop_bones[0]]
         torsoProp = rig_bones[prop_bones[2]]
@@ -282,8 +375,8 @@ class SEDAIA_PT_SACR8_sui_torsoConfig(Panel):
                    text="Female Deforms", slider=True)
 
 
-class SEDAIA_PT_SACR8_sui_armConfig(Panel):
-    bl_parent_id = "SEDAIA_PT_SACR8_ui_global"
+class SEDAIA_PT_SACR8_UI1_sui_armConfig(Panel):
+    bl_parent_id = "SEDAIA_PT_SACR8_UI1_ui_global"
     bl_label = "Arms"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -334,8 +427,8 @@ class SEDAIA_PT_SACR8_sui_armConfig(Panel):
                    index=1, text="Wrist IK")
 
 
-class SEDAIA_PT_SACR8_sui_legConfig(Panel):
-    bl_parent_id = "SEDAIA_PT_SACR8_ui_global"
+class SEDAIA_PT_SACR8_UI1_sui_legConfig(Panel):
+    bl_parent_id = "SEDAIA_PT_SACR8_UI1_ui_global"
     bl_label = "Legs"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -391,14 +484,14 @@ class SEDAIA_PT_SACR8_sui_legConfig(Panel):
 
 classes = [
     # Main Panels
-    SEDAIA_PT_SACR8_ui_global,
+    SEDAIA_PT_SACR8_UI1_ui_global,
 
     # Sub Panels
-    SEDAIA_PT_SACR8_sui_QuickParentCTRL,
-    SEDAIA_PT_SACR8_sui_headConfig,
-    SEDAIA_PT_SACR8_sui_torsoConfig,
-    SEDAIA_PT_SACR8_sui_armConfig,
-    SEDAIA_PT_SACR8_sui_legConfig,
+    SEDAIA_PT_SACR8_UI1_sui_QuickParentCTRL,
+    SEDAIA_PT_SACR8_UI1_sui_headConfig,
+    SEDAIA_PT_SACR8_UI1_sui_torsoConfig,
+    SEDAIA_PT_SACR8_UI1_sui_armConfig,
+    SEDAIA_PT_SACR8_UI1_sui_legConfig,
 ]
 
 

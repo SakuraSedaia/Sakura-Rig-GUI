@@ -10,13 +10,9 @@ id_str = [
     "sacr_1",  # SACR R7.2.1 and older
 ]
 mesh_mat_obj = "MaterialEditor"
+script_version = "1.2.1"
 
 dev_mode = True
-
-if dev_mode is True:
-    op_id = "sedaia_dev_ot."
-else:
-    op_id = "sedaia_ot."
 
 D = bpy.data
 C = bpy.context
@@ -90,12 +86,12 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
             row = layout.row()
             row.label(text="Skin Texture")
             row = layout.row(align=True)
-            row.operator(f"{op_id}imgpack", icon="PACKAGE" if is_packed(
+            row.operator("sedaia_ot.imgpack", icon="PACKAGE" if is_packed(
                 skinImgProp) else "UGLYPACKAGE").img_name = skinImgProp.name
             row = row.row(align=True)
             row.enabled = not is_packed(skinImgProp)
             row.prop(skinImgProp, "filepath", text="")
-            row.operator(f"{op_id}imgreload", icon="FILE_REFRESH",
+            row.operator("sedaia_ot.imgreload", icon="FILE_REFRESH",
                          text="").img_name = skinImgProp.name
 
             layout.separator(type="LINE")

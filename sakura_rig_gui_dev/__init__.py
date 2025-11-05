@@ -11,9 +11,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from . import (SedaiaOperators_Dev, sacrUI_R8_UI1)
+from . import (
+    SedaiaOperators_Dev,
+    sacrUI_R8_UI1,
+    addon_prefs
+)
 
-modules = [SedaiaOperators_Dev, sacrUI_R8_UI1]
+modules = [
+    SedaiaOperators_Dev,
+    sacrUI_R8_UI1,
+    addon_prefs
+]
 
 
 def register():
