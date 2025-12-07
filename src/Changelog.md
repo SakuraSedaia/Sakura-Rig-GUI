@@ -1,28 +1,17 @@
-# Sakura's Rig Interfaces
+## Sakura's Rig Interfaces V3
 
-
-Sakura's Rig Interfaces is a container addon designed to make development of UI scripts even easier by adding a dynamic loading script along with global utilities which make having duplicate classes a rarer occurance. This Branch is the Development branch, 
+Dev Version: V3
+Targeted Blender: 5.0
+Minimum Blender: 4.2
 
 ---
+V3 Summary
 
-## WARNING
+V3 see's another architecture change, making it much easier to add more Rig Interfaces to the UI with an Autoload script and dynamic loading for other modules.
 
-This branch cannot be active at the same time as the stable branch due to conflicting classes
+On top of the Architecture changes, the Skin Downloader and an updated UI Script for SACR R7 which utilizes some of the new backend hooks and properties from R7.4 for more fine control.
 
-## Instructions
-
-1. Download the Latest release of Sakura's Rig Interfaces Addon from either [my website](https://sakura-sedaia.com/addon/sakura-rig-interface) or the [Blender Extensions](https://extensions.blender.org/add-ons/sakura-rig-interfaces/) site
-2. Open Blender, and navigate to User Preferences > Addons
-3. Open the Dropdown Arrow on the Top Right
-4. Select "Install From Disk" and install the Sakura Rig Interfaces Addon
-5. Check Addon to ensure it is enabled
-6. Download the appropriate Rig from [https://sakura-sedaia.com/rigs/sacr](https://sakura-sedaia.com/rig/sakura-character-rig)c
-7. Open the Rig and enjoy
-
-## Credits
-
-- JacquesLocke's [Blender Development extension](https://github.com/JacquesLucke/blender_vscode) for Visual Studio Code
-
+---
 
 ## Changelog
 

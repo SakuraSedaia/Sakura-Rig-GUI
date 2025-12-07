@@ -1,4 +1,4 @@
-from .SedaiaOperators_Dev import is_packed
+from ..utils import sedaia_utils
 from bpy.types import Panel, Operator
 import bpy
 rig = "SACR"
@@ -10,7 +10,8 @@ id_str = [
     "sacr_1",  # SACR R7.2.1 and older
 ]
 mesh_mat_obj = "MaterialEditor"
-script_version = "1.2.1"
+AddonID = "sedaia_interface"
+script_version = "1.3.1"
 
 dev_mode = True
 
@@ -67,10 +68,11 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
                 # Find Material Object
                 objName = l.name.split(".")[0]
                 if objName == mesh_mat_obj:
-                    matObj = l
+                    mat_obj = l
                     break
-            skinMat = matObj.material_slots[0].material.node_tree
-            skinImgProp = skinMat.nodes["Rig Texture"].image
+
+        skin = mat_obj.material_slots[0].material.node_tree
+        skinTex = skin.nodes["Rig Texture"].image
 
         # Define UI
         layout = self.layout
@@ -83,16 +85,17 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
         layout.separator(type="LINE")
 
         if obj.data[id_prop] == id_str[0]:
+
             row = layout.row()
             row.label(text="Skin Texture")
             row = layout.row(align=True)
-            row.operator("sedaia_ot.imgpack", icon="PACKAGE" if is_packed(
-                skinImgProp) else "UGLYPACKAGE").img_name = skinImgProp.name
+            row.operator(sedaia_utils.ops['image_pack'], icon="PACKAGE" if sedaia_utils.is_packed(
+                skinTex) else "UGLYPACKAGE", text="").path = skinTex.name
             row = row.row(align=True)
-            row.enabled = not is_packed(skinImgProp)
-            row.prop(skinImgProp, "filepath", text="")
-            row.operator("sedaia_ot.imgreload", icon="FILE_REFRESH",
-                         text="").img_name = skinImgProp.name
+            row.enabled = not sedaia_utils.is_packed(skinTex)
+            row.prop(skinTex, "filepath", text="")
+            row.operator(sedaia_utils.ops['image_reload'],
+                         icon="FILE_REFRESH", text="").path = skinTex.name
 
             layout.separator(type="LINE")
 
@@ -116,7 +119,7 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
 
         col.prop(obj.pose, "use_mirror_x", toggle=True)
 
-        if lite == False:
+        if not lite:
             col.prop(main, '["Long Hair Rig"]', text="Long Hair")
 
             layout.separator(type="LINE")
@@ -265,7 +268,7 @@ class SEDAIA_PT_sacr_7_uiFace(T.Panel):
 
             main = bone["Rig_Properties"]
             face_on = main["Face Toggle"]
-            if face_on == True:
+            if face_on:
                 if obj and obj.type == "ARMATURE" and obj.data:
                     return obj.data[id_prop] == id_str[0] or id_str[1]
                 else:
@@ -455,7 +458,7 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
         col.prop(eyes, '["Iris Inset"]', slider=True)
         col.prop(eyes, '["Sclera Depth"]', slider=True)
 
-        if lite == False:
+        if not lite:
             row = col.row(align=True)
             row.prop(eyes, '["Eyelashes"]', text="Lash Style")
 
@@ -465,7 +468,7 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
                 rowTog.prop(lashMat.inputs['Base Color'],
                             'default_value', text="")
 
-            if sparkle == True:
+            if sparkle:
                 row = col.row(align=True)
                 row.prop(eyes, '["Eyesparkle"]', toggle=True, text="Sparkle")
 

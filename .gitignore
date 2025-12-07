@@ -3,9 +3,10 @@
 .*
 
 # IDE
-*/__pycache__
+*__pycache__*
 *.code-workspace
 
 # Blender Temp Files
 *.blend1
 *.blend2
+/src/utils/id.py

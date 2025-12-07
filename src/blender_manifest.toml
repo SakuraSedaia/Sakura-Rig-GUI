@@ -1,21 +1,21 @@
 schema_version = "1.0.0"
 
-id = "Sakura_Rig_GUI"
-version = "2.0.2"
-name = "Sakura Rig GUI Experimental"
+id = "Sakura_Rig_Interface"
+version = "3.2.4"
+name = "Sakura Rig Interface Experimental"
 tagline = "A control script for use with Sakura's Rigs"
 maintainer = "Sakura Sedaia"
 # Supported types: "add-on", "theme"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc
-website = "https://sakura-sedaia.com/sakura-rig-gui"
+website = "https://sakura-sedaia.com/addon/sakura-rig-interface"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
 tags = ["Rigging", "User Interface"]
 
-blender_version_min = "4.5.0"
+blender_version_min = "4.2.0"
 # # Optional: Blender version that the extension does not support, earlier versions are supported.
 # # This can be omitted and defined later on the extensions platform if an issue is found.
 # blender_version_max = "5.1.0"
@@ -54,9 +54,9 @@ license = ["SPDX:GPL-3.0-or-later"]
 # # Keep this a single short sentence without a period (.) at the end.
 # # For longer explanations use the documentation or detail page.
 #
-# [permissions]
-# network = "Used to download rigs from Sakura's Github"
-# files = "Import/export FBX from/to disk"
+[permissions]
+network = "Used to download rigs from Sakura's Github and Player Skins from Mojang Servers"
+files = "Save and Store Player Skin Information and Downloaded Rigs"
 # clipboard = "Copy and paste bone transforms"
 
 # # Optional: advanced build settings.
