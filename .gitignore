@@ -1,9 +1,12 @@
-*/__pycache__
-*.blend*
-*.pyc
-*archive
-notes.txt
-*.hidden
-*.build
-*.idea
-Sakura-Rig-GUI.code-workspace
+
+# Generic Folders
+.*
+
+# IDE
+*__pycache__*
+*.code-workspace
+
+# Blender Temp Files
+*.blend1
+*.blend2
+/src/utils/id.py
