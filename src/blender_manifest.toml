@@ -56,7 +56,7 @@ license = ["SPDX:GPL-3.0-or-later"]
 # # For longer explanations use the documentation or detail page.
 #
 [permissions]
-network = "Used to download rigs from Sakura's Github and Player Skins from Mojang Servers"
+network = "Used to download Files from various networks"
 files = "Save and Store Player Skin Information and Downloaded Rigs"
 # clipboard = "Copy and paste bone transforms"
 
