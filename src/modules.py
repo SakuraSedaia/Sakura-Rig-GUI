@@ -1,32 +1,43 @@
+# region Imports
 from importlib import reload, import_module
 import pkgutil
 from pathlib import Path
+# endregion
 
-# =============
-# Core UI
-# =============
+
+# region Core UI
 if "prefs" in locals():
     reload(prefs)
 else:
     from . import prefs
 
-if "ulobal_ui" in locals():
-    reload(global_ui)
+if "SKIN_utility_ui" in locals():
+    reload(SKIN_utility_ui)
 else:
-    from . import global_ui
+    from .sedaia_ui import SKIN_utility_ui
+# endregion
 
 
-# =============
-# Utilities
-# =============
+# region Utilities
 if "sedaia_utils" in locals():
     reload(sedaia_utils)
 else:
     from .utils import sedaia_utils
+# endregion
 
-# =============
-# Auto-Import Rig UIs
-# =============
+
+# region Import SACR Rigs
+if "SACR_R7_UI1" in locals():
+    reload(SACR_R7_UI1)
+else:
+    from .sedaia_ui import SACR_R7_UI1
+
+if "SACR_R7_UI2" in locals():
+    reload(SACR_R7_UI2)
+else:
+    from .sedaia_ui import SACR_R7_UI2
+
+# region Auto-Import Rig UIs
 
 
 def get_all_submodules(directory):
@@ -48,13 +59,19 @@ def iter_submodule_names(path, root="rig_ui."):
             yield root + module_name
 
 
+# endregion
+# region Registering
 modules = (
     # Core UI
     prefs,
-    global_ui,
+    SKIN_utility_ui,
 
     # Utilities
     sedaia_utils,
+
+    # SACR GUI's
+    SACR_R7_UI1,
+    SACR_R7_UI2,
 )
 rig_modules = get_all_submodules(f"{Path(__file__).parent}/rig_ui/")
 

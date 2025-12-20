@@ -11,7 +11,7 @@ id_str = [
 ]
 mesh_mat_obj = "MaterialEditor"
 AddonID = "sedaia_interface"
-script_version = "1.3.1"
+script_version = "1.3.2"
 
 
 D = bpy.data
@@ -96,7 +96,6 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
 
         row = layout.row(align=True)
         row.label(text="Rig Settings")
-        row = layout.row()
         col = layout.column_flow(columns=2, align=True)
         col.prop(main, '["Wireframe Bones"]', toggle=True,
                  invert_checkbox=True, text="Solid Bones")
@@ -855,7 +854,7 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
         except (AttributeError, KeyError, TypeError):
             classic_molar = True
 
-        if classic_molar is True:
+        if classic_molar:
             col.prop(
                 mouth, '["Fangs Controller"]', toggle=True, text="Molar/Fang Controls"
             )

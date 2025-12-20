@@ -11,7 +11,7 @@ Sakura's Rig Interfaces is a container addon designed to make development of UI 
 3. Open the Dropdown Arrow on the Top Right
 4. Select "Install From Disk" and install the Sakura Rig Interfaces Addon
 5. Check Addon to ensure it is enabled
-6. Download the appropriate Rig from [https://sakura-sedaia.com/rigs/sacr](https://sakura-sedaia.com/rig/sakura-character-rig)c
+6. Download the appropriate Rig from [https://sakura-sedaia.com/rigs/sacr](https://sakura-sedaia.com/rig/sakura-character-rig)
 7. Open the Rig and enjoy
 
 ## Credits

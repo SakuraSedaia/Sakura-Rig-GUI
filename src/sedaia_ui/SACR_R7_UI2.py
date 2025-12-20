@@ -1,33 +1,9 @@
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-
-# =============
 # region Imports
-# Util Import
 import bpy
-from bpy.types import (
-    Panel,
-    PoseBone
-)
-from bpy.props import (
-    EnumProperty,
-)
+from bpy.types import Panel, PoseBone
+from bpy.props import EnumProperty
 from ..utils import sedaia_utils as utils
-
-
 # endregion
-# =============
 # region Manifest
 bl_info = {
     "name": "Sakura Rig UI",  # UI Name
@@ -35,7 +11,7 @@ bl_info = {
     "author": "Sakura Sedaia",
     "author_id": "Sedaia",
 
-    "version": (2, 0, 0),
+    "version": (2, 0, 1),
     "blender": (5, 0, 0),
     "location": "",
     "description": "",
@@ -45,32 +21,13 @@ bl_info = {
     "category": "Interface",
 }
 
-
 rig_info = {
     "name": "Sakura's Advanced Character Rig",
     "id": "SACR",
-    "version": (7, 4, 0),
+    "version": (7, 4, 1),
 }
 # endregion
-# =============
-# region Addon Metadata (DO NOT MODIFY THIS AREA)
-
-# endregion
-# =============
 # region Rig Settings
-config = {
-    # UI properties
-    "tab": f"{rig_info['id']} R{rig_info['version'][0]}",
-
-    # Rig Properties
-    # ==============
-    # Should output SACR.Rev_7.UI_2
-    "id": f"{rig_info['id']}.Rev_{rig_info['version'][0]}.UI_{bl_info['version'][0]}",
-    "idProp": "rigID",
-    # Will set the Collection Name to match the rig when the name is changed
-    "setGroupNamewithRig": True,
-}
-
 config_objs = {
     "main": "Rig_Properties",
     "face": "Face_Properties",
@@ -81,15 +38,16 @@ config_objs = {
     "root_bone": "SACR_Root"
 }
 # endregion
-# =============
 # region Object IDs
 panel_prefix = f"SEDAIA_SACR{rig_info['version'][0]}_UI{bl_info['version'][0]}_PT"
-panel = {
+panels = {
     "global": f"{panel_prefix}_global",
     "head": f"{panel_prefix}_sui_head",
     "face": f"{panel_prefix}_sui_face",
     "eyebrows": f"{panel_prefix}_sui_eyebrows",
+    "eyes" : f"{panel_prefix}_sui_eyes",
     "iris": f"{panel_prefix}_sui_irises",
+    "pupil_ramp": f"{panel_prefix}_sui_pupil_ramp",
     "sclera": f"{panel_prefix}_sui_sclera",
     "mouth": f"{panel_prefix}_sui_mouth",
     "arm": f"{panel_prefix}_sui_arm",
@@ -98,9 +56,41 @@ panel = {
     "armor": f"{panel_prefix}_sui_armor",
 }
 
+class SACR7_UI2_panel:
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = f"{rig_info['id']} R{rig_info['version'][0]}"
 
+
+    @classmethod
+    def poll(self, context):
+        rig_id = f"{rig_info['id']}.Rev_{rig_info['version'][0]}.UI_{bl_info['version'][0]}"
+        prop_name = "rigID"
+
+        try:
+            r = context.active_object
+            if r and r.type == "ARMATURE" and r.data:
+                rData = r.data
+                return rData[prop_name] == rig_id
+            else:
+                return False
+        except (AttributeError, KeyError, TypeError):
+            return False
+
+class SACR7_UI2_face_panel:
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = f"{rig_info['id']} R{rig_info['version'][0]}"
+
+    @classmethod
+    def poll(self, context):
+        try:
+            obj = context.active_object
+            face_on = obj.pose.bones["Rig_Properties"]["Face Toggle"]
+            return face_on
+        except (AttributeError, KeyError, TypeError):
+            return False
 # endregion
-# =============
 # region Custom Properties
 PoseBone.ArmType = EnumProperty(
     name="Arm Type",
@@ -127,30 +117,12 @@ PoseBone.Eyelashes = EnumProperty(
     ]
 )
 
-
 # endregion
-# =============
 # region Global Panel
-class SACR7_UI2_ui_global(Panel):
+class SACR7_UI2_ui_global(SACR7_UI2_panel, Panel):
     bl_label = "SACR Properties"
-    bl_idname = panel['global']
-    bl_category = config["tab"]
+    bl_idname = panels['global']
     bl_order = 0
-
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-    @classmethod
-    def poll(self, context):
-        try:
-            r = context.active_object
-            if r and r.type == "ARMATURE" and r.data:
-                rData = r.data
-                return rData[config["idProp"]] == config["id"]
-            else:
-                return False
-        except (AttributeError, KeyError, TypeError):
-            return False
 
     def draw(self, context):
 
@@ -163,10 +135,10 @@ class SACR7_UI2_ui_global(Panel):
         rig_child = rig.children_recursive
 
         mat_obj = utils.lookup_name(
-            list=rig_child, query=config_objs['materials'])
+            bl_list=rig_child, query=config_objs['materials'])
 
         meshCol = utils.lookup_name(
-            list=rig_col.children, query="Mesh")
+            bl_list=rig_col.children, query="Mesh")
 
         lite = rig_data['lite']
         skin = mat_obj.material_slots[0].material.node_tree
@@ -210,9 +182,10 @@ class SACR7_UI2_ui_global(Panel):
             'enabled',
             text="Reset Rig Scale",
             invert_checkbox=True, icon="CHECKBOX_DEHLT")
-        col.prop(meshCol, 'hide_select',
-                 text="Restrict Selection")
+
         if lite is False:
+            col.prop(meshCol, 'hide_select',
+                     text="Restrict Selection")
             col.prop(mainProp, '["Show Lattices"]',
                      index=0,
                      text="Body Lattices",
@@ -220,21 +193,17 @@ class SACR7_UI2_ui_global(Panel):
 
 
 # endregion
-# =============
 # region Head Settings
-class SACR7_UI2_sui_head(Panel):
-    bl_parent_id = panel['global']
-    bl_idname = panel['head']
+class SACR7_UI2_sui_head(SACR7_UI2_panel, Panel):
+    bl_parent_id = panels['global']
+    bl_idname = panels['head']
     bl_label = "Head"
     bl_order = 0
 
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
 
     def draw(self, context):
         # Variables and Data
         rig = context.active_object
-        rig_data = rig.data
         rig_bones = rig.pose.bones
 
         mainProp = rig_bones[config_objs['main']]
@@ -251,33 +220,19 @@ class SACR7_UI2_sui_head(Panel):
 
 
 # endregion
-# =============
 # region Face Panel
 # Child of the Head Panel
-class SACR7_UI2_sui_face(Panel):
+class SACR7_UI2_sui_face(SACR7_UI2_face_panel, Panel):
     bl_label = "Face"
-    bl_idname = panel["face"]
-    bl_parent_id = panel["head"]
+    bl_idname = panels["face"]
+    bl_parent_id = panels["head"]
     bl_order = 0
 
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-    @classmethod
-    def poll(self, context):
-        try:
-            obj = context.active_object
-            face_on = obj.pose.bones["Rig_Properties"]["Face Toggle"]
-            return face_on
-        except (AttributeError, KeyError, TypeError):
-            return False
 
     def draw(self, context):
         # Variables and Data
         rig = context.active_object
-        rig_data = rig.data
         rig_bones = rig.pose.bones
-        rig_bc = rig_data.collections_all
         faceProp = rig_bones[config_objs["face"]]
 
         panel = self.layout
@@ -290,127 +245,31 @@ class SACR7_UI2_sui_face(Panel):
                    text="Face Auto-UV", toggle=True,
                    icon="HIDE_ON" if faceProp["Face | UV"] is False else "HIDE_OFF")
 
-        p_row = panel.row()
-        p_row.label(text="On-Face Controls")
-
-        p_row = panel.row()
-        f_col = p_row.column()
-        fc_row = f_col.row()
-
-        fc_row.prop(rig_bc["Eyebrow_Left_Simplified"], 'is_visible',
-                    text="Left Eyebrow",
-                    icon="HIDE_ON" if rig_bc["Eyebrow_Left_Simplified"].is_visible is False else "HIDE_OFF"
-                    )
-
-        fc_row.prop(rig_bc["Eyebrow_Right_Simplified"],
-                    'is_visible',
-                    text="Right Eyebrow",
-                    icon="HIDE_ON" if rig_bc["Eyebrow_Right_Simplified"].is_visible is False else "HIDE_OFF"
-                    )
-
-        fc_row = f_col.row()
-        fc_row.prop(rig_bc["Eye_Left_Simplified"], 'is_visible',
-                    text="Left Eye",
-                    icon="HIDE_ON" if rig_bc["Eye_Left_Simplified"].is_visible is False else "HIDE_OFF"
-                    )
-
-        fc_row.prop(rig_bc["Eye_Right_Simplified"],
-                    'is_visible',
-                    text="Right Eye",
-                    icon="HIDE_ON" if rig_bc["Eye_Right_Simplified"].is_visible is False else "HIDE_OFF"
-                    )
-
-        fc_row = f_col.row()
-        fc_row.prop(rig_bc["Mouth"],
-                    'is_visible',
-                    text="Mouth",
-                    icon="HIDE_ON" if rig_bc["Mouth"].is_visible is False else "HIDE_OFF"
-                    )
-
-        p_row = panel.row()
-        p_row.label(text="On-Face Controls")
-        p_row = panel.row()
-        f_col = p_row.column()
-        fc_row = f_col.row()
-
-        col = fc_row.column()
-        col.enabled = rig_bc['Eyebrow_Left_Simplified'].is_visible
-        col.prop(rig_bc["Eyebrow_Left_Advanced"],
-                 'is_visible',
-                 text="Left Eyebrow",
-                 icon="HIDE_ON" if rig_bc["Eyebrow_Left_Advanced"].is_visible is False else "HIDE_OFF"
-                 )
-
-        col = fc_row.column()
-        col.enabled = rig_bc['Eyebrow_Right_Simplified'].is_visible
-        col.prop(rig_bc["Eyebrow_Right_Advanced"],
-                 'is_visible',
-                 text="Right Eyebrow",
-                 icon="HIDE_ON" if rig_bc["Eyebrow_Right_Advanced"].is_visible is False else "HIDE_OFF"
-                 )
-
-        fc_row = f_col.row()
-        col = fc_row.column()
-        col.enabled = rig_bc['Eye_Left_Simplified'].is_visible
-        col.prop(rig_bc["Eye_Left_Advanced"],
-                 'is_visible',
-                 text="Left Eye",
-                 icon="HIDE_ON" if rig_bc["Eye_Left_Advanced"].is_visible is False else "HIDE_OFF"
-                 )
-
-        col = fc_row.column()
-        col.enabled = rig_bc['Eye_Right_Simplified'].is_visible
-        col.prop(rig_bc["Eye_Right_Advanced"],
-                 'is_visible',
-                 text="Right Eye",
-                 icon="HIDE_ON" if rig_bc["Eye_Right_Advanced"].is_visible is False else "HIDE_OFF"
-                 )
-
-        fc_row = f_col.row()
-        col = fc_row.column()
-        col.enabled = rig_bc['Mouth'].is_visible
-        col.prop(rig_bc["Mouth_Advanced"],
-                 'is_visible',
-                 text="Mouth",
-                 icon="HIDE_ON" if rig_bc["Mouth_Advanced"].is_visible is False else "HIDE_OFF"
-                 )
-
 
 # endregion
-# =============
 # region Eyebrows Panel
 # Child of Face Panel
-class SACR7_UI2_sui_eyebrows(Panel):
+class SACR7_UI2_sui_eyebrows(SACR7_UI2_face_panel, Panel):
     bl_label = "Eyebrows"
-    bl_idname = panel["eyebrows"]
-    bl_parent_id = panel["face"]
+    bl_idname = panels["eyebrows"]
+    bl_parent_id = panels["face"]
     bl_order = 0
 
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-    @classmethod
-    def poll(self, context):
-        try:
-            obj = context.active_object
-            face_on = obj.pose.bones["Rig_Properties"]["Face Toggle"]
-            return face_on
-        except (AttributeError, KeyError, TypeError):
-            return False
 
     def draw(self, context):
         # Rig Data
         rig = context.active_object
+        rig_data = rig.data
         rig_bones = rig.pose.bones
+        rig_bc = rig_data.collections_all
 
         eyebrowProp = rig_bones[config_objs["eyebrows"]]
 
         rig_child = rig.children_recursive
 
         mat_obj = utils.lookup_name(
-            list=rig_child, query=config_objs['materials'])
+            bl_list=rig_child, query=config_objs['materials'])
 
-        skin = mat_obj.material_slots[0].material.node_tree
 
         eyebrowMat = mat_obj.material_slots[6].material.node_tree.nodes['Node']
         eyebrowGrad = eyebrowMat.inputs['Gradient'].default_value
@@ -418,6 +277,42 @@ class SACR7_UI2_sui_eyebrows(Panel):
 
         panel = self.layout
 
+        row = panel.row()
+        row.label(text="Controller Toggle")
+        row = panel.row()
+        col = row.column()
+
+        # Left Eyebrow
+        row = col.row(align=True)
+        row.prop(rig_bc["Eyebrow_Left_Simplified"], 'is_visible',
+                    text="Left Basic",
+                    icon="HIDE_ON" if rig_bc["Eyebrow_Left_Simplified"].is_visible is False else "HIDE_OFF"
+                    )
+        row_e = row.row(align=True)
+        row_e.enabled = rig_bc['Eyebrow_Left_Simplified'].is_visible
+        row_e.prop(rig_bc["Eyebrow_Left_Advanced"],
+                 'is_visible',
+                 text="Left Advanced",
+                 icon="HIDE_ON" if rig_bc["Eyebrow_Left_Advanced"].is_visible is False else "HIDE_OFF"
+                 )
+
+        # Right Eyebrow
+        row = col.row(align=True)
+        row.prop(rig_bc["Eyebrow_Right_Simplified"],
+                    'is_visible',
+                    text="Right Basic",
+                    icon="HIDE_ON" if rig_bc["Eyebrow_Right_Simplified"].is_visible is False else "HIDE_OFF"
+                    )
+
+        row_e = row.row(align=True)
+        row_e.enabled = rig_bc['Eyebrow_Right_Simplified'].is_visible
+        row_e.prop(rig_bc["Eyebrow_Right_Advanced"],
+                 'is_visible',
+                 text="Right Advanced",
+                 icon="HIDE_ON" if rig_bc["Eyebrow_Right_Advanced"].is_visible is False else "HIDE_OFF"
+                 )
+
+        panel.separator(type="LINE")
         row = panel.row()
         row.label(text="Options", icon="PROPERTIES")
 
@@ -461,26 +356,63 @@ class SACR7_UI2_sui_eyebrows(Panel):
 
 
 # endregion
-# =============
 # region Iris Panel
-# Child of Face Panel
-class SACR7_UI2_sui_iris(Panel):
-    bl_label = "Irises"
-    bl_idname = panel["iris"]
-    bl_parent_id = panel["face"]
+class SACR7_UI2_sui_eyes(SACR7_UI2_face_panel, Panel):
+    bl_label = "Eyes"
+    bl_idname = panels["eyes"]
+    bl_parent_id = panels["face"]
     bl_order = 1
 
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
+    def draw(self, context):
+        rig = context.active_object
+        rig_data = rig.data
+        rig_bc = rig_data.collections_all
 
-    @classmethod
-    def poll(self, context):
-        try:
-            obj = context.active_object
-            face_on = obj.pose.bones["Rig_Properties"]["Face Toggle"]
-            return face_on
-        except (AttributeError, KeyError, TypeError):
-            return False
+        panel = self.layout
+
+        row = panel.row()
+        row.label(text="Controller Toggle")
+        row = panel.row()
+        col = row.column()
+
+        # Left Eyebrow
+        row = col.row(align=True)
+        row.prop(rig_bc["Eye_Left_Simplified"], 'is_visible',
+                    text="Left Basic",
+                    icon="HIDE_ON" if rig_bc["Eye_Left_Simplified"].is_visible is False else "HIDE_OFF"
+                    )
+        row_e = row.row(align=True)
+        row_e.enabled = rig_bc['Eye_Left_Simplified'].is_visible
+        row_e.prop(rig_bc["Eye_Left_Advanced"],
+                 'is_visible',
+                 text="Left Advanced",
+                 icon="HIDE_ON" if rig_bc["Eye_Left_Advanced"].is_visible is False else "HIDE_OFF"
+                 )
+
+        # Right Eyebrow
+        row = col.row(align=True)
+        row.prop(rig_bc["Eye_Right_Simplified"],
+                    'is_visible',
+                    text="Right Basic",
+                    icon="HIDE_ON" if rig_bc["Eye_Right_Simplified"].is_visible is False else "HIDE_OFF"
+                    )
+
+        row_e = row.row(align=True)
+        row_e.enabled = rig_bc['Eye_Right_Simplified'].is_visible
+        row_e.prop(rig_bc["Eye_Right_Advanced"],
+                 'is_visible',
+                 text="Right Advanced",
+                 icon="HIDE_ON" if rig_bc["Eye_Right_Advanced"].is_visible is False else "HIDE_OFF"
+                 )
+
+# endregion
+# Region Iris Panel
+# Child of Eyes Panel
+class SACR7_UI2_sui_iris(SACR7_UI2_face_panel, Panel):
+    bl_label = "Irises"
+    bl_idname = panels["iris"]
+    bl_parent_id = panels["eyes"]
+    bl_order = 0
 
     def draw(self, context):
         # Rig Data
@@ -494,7 +426,7 @@ class SACR7_UI2_sui_iris(Panel):
         rig_child = rig.children_recursive
 
         mat_obj = utils.lookup_name(
-            list=rig_child, query=config_objs['materials'])
+            bl_list=rig_child, query=config_objs['materials'])
 
         iris_mat = mat_obj.material_slots[1].material.node_tree
         iris_shad = iris_mat.nodes['Iris_Shader']
@@ -503,16 +435,17 @@ class SACR7_UI2_sui_iris(Panel):
 
         panel = self.layout
 
-        row = panel.row()
+        panel_ui = panel
+        row = panel_ui.row()
         row.label(text="Options", icon="PROPERTIES")
 
         if rig.data['lite'] is False:
-            row = panel.row(align=True)
+            row = panel_ui.row(align=True)
             split = row.split(factor=.3)
             split.label(text="Lash Style")
             split.prop(props, 'Eyelashes', text="")
 
-            row = panel.row()
+            row = panel_ui.row()
             col = row.column(align=True)
 
             crow = col.row(align=True)
@@ -528,21 +461,21 @@ class SACR7_UI2_sui_iris(Panel):
                       )
             col.prop(props, '["Iris Inset"]', text="Inset Irises")
         else:
-            row = panel.row()
+            row = panel_ui.row()
             col = row.column(align=True)
             col.prop(props, '["Iris Inset"]', text="Inset Irises")
 
-        panel.separator(type="LINE")
+        panel_ui.separator(type="LINE")
 
-        row = panel.row()
+        row = panel_ui.row()
         row.label(text="Materials")
 
         iris_grad = iris_shad.inputs[0].default_value
         iris_het = iris_shad.inputs[3].default_value
 
-        row = panel.row()
+        row = panel_ui.row()
         row.label(text="Colors", icon="MOD_COLOR_BALANCE")
-        row = panel.row(align=True)
+        row = panel_ui.row(align=True)
         colLeft = row.column(heading="", align=True)
         colLeftRow1 = colLeft.row(align=True)
         colLeftRow2 = colLeft.row(align=True)
@@ -574,10 +507,10 @@ class SACR7_UI2_sui_iris(Panel):
         colRightRow2.prop(
             iris_shad.inputs[5], "default_value", text="")
 
-        row = panel.row(align=True)
+        row = panel_ui.row(align=True)
         row.label(text="Reflections", icon="MATERIAL_DATA")
 
-        row = panel.row(align=True)
+        row = panel_ui.row(align=True)
         col = row.column(align=True)
         col.prop(iris_shad.inputs[19], 'default_value', text="Metalic")
         col.prop(iris_shad.inputs[20], 'default_value', text="Specular")
@@ -587,24 +520,30 @@ class SACR7_UI2_sui_iris(Panel):
         split.label(text="Spec Tint")
         split.prop(iris_shad.inputs[22], 'default_value', text="")
 
-        panel.separator(type="LINE")
+        panel_ui.separator(type="LINE")
 
         emit_enable = iris_shad.inputs[31].default_value
 
-        row = panel.row()
-        split = row.split(factor=.92)
-        split.label(text="Emission", icon="OUTLINER_OB_LIGHT")
-        split.prop(iris_shad.inputs[31],
+        row = panel_ui.row()
+        row.label(text="Emission", icon="OUTLINER_OB_LIGHT")
+        row = row.row()
+        row.alignment = 'RIGHT'
+        row.ui_units_x = 3
+        row.prop(iris_shad.inputs[31],
                    'default_value',
                    text="",
                    icon="CHECKBOX_HLT" if emit_enable is True else "CHECKBOX_DEHLT",
                    )
 
         if emit_enable:
-            row = panel.row(align=True)
-
+            row = panel_ui.row()
+            row.prop(iris_shad.inputs[32], 'default_value', text='Factor')
+            row = panel_ui.row()
+            row.label(text="Emit Strength")
             emit_het = iris_shad.inputs[34].default_value
             emit_grad = iris_shad.inputs[35].default_value
+            row = panel_ui.row(align=True)
+
 
             if iris_shad.inputs[33].default_value is True:
                 colLeft = row.column(heading="", align=True)
@@ -637,36 +576,40 @@ class SACR7_UI2_sui_iris(Panel):
                 colRightRow2.enabled = emit_het and emit_grad
                 colRightRow2.prop(
                     iris_shad.inputs[39], "default_value", text="")
+                row = panel_ui.row()
+                row.prop(iris_shad.inputs[33], "default_value", text='Split Channels', toggle=True)
+
             else:
                 col = row.column()
                 col.prop(iris_shad.inputs[36],
                          "default_value", text="Strength")
-                col.prop(
-                    iris_shad.inputs[33], "default_value", text='Split Channels', toggle=True)
+                col.prop(iris_shad.inputs[33], "default_value", text='Split Channels', toggle=True)
 
-        row = panel.row()
-        split = row.split(factor=.92)
-        split.label(text="Pupils", icon="SHADING_RENDERED")
-        split.prop(iris_shad.inputs[40],
+        row = panel_ui.row(align=True)
+        row.label(text="Pupils", icon="SHADING_RENDERED")
+        row = row.row(align=True)
+        row.alignment = 'RIGHT'
+        row.ui_units_x = 3
+        row.prop(iris_shad.inputs[40],
                    'default_value',
                    text="",
                    icon="CHECKBOX_HLT" if iris_shad.inputs[40].default_value is True else "CHECKBOX_DEHLT",
-                   )
+        )
 
         pupil_toggle = iris_shad.inputs[40].default_value
         if pupil_toggle is True:
-            row = panel.row()
+            row = panel_ui.row()
             row.prop(iris_shad.inputs[41], 'default_value', text='')
 
-            row = panel.row(align=True)
+            row = panel_ui.row(align=True)
 
             row.prop(iris_shad.inputs[42], 'default_value', text='Opacity')
             row.prop(iris_shad.inputs[43], 'default_value', text='Custom')
 
-            row = panel.row(align=True)
+            row = panel_ui.row(align=True)
             row.label(text="Pupil Scale")
 
-            row = panel.row(align=True)
+            row = panel_ui.row(align=True)
 
             row.enabled = iris_shad.inputs[40].default_value
             row.prop(iris_shad.inputs['Size X'],
@@ -674,16 +617,14 @@ class SACR7_UI2_sui_iris(Panel):
             row.prop(iris_shad.inputs['Size Y'],
                      'default_value', text='Y', slider=True)
 
-            panel.separator(type="LINE")
+            panel_ui.separator(type="LINE")
 
-            row = panel.row(align=True)
-
-            row = panel.row(align=True)
+            row = panel_ui.row(align=True)
             if iris_shad.inputs[43].default_value > 0:
                 row = row.row()
                 row.label(text="Pupil Texture")
 
-                row = panel.row(align=True)
+                row = panel_ui.row(align=True)
                 row.enabled = iris_shad.inputs[43].default_value > 0
                 row = row.row(align=True)
                 row.operator(utils.ops['image_pack'], icon="PACKAGE" if utils.is_packed(
@@ -694,42 +635,31 @@ class SACR7_UI2_sui_iris(Panel):
                 row.operator(utils.ops['image_reload'], icon="FILE_REFRESH",
                              text="").path = pupil_tex.name
 
-                row = panel.row(align=True)
-                row.enabled = iris_shad.inputs[43].default_value > 0
 
-                boxe = row.box()
-                boxe.label(text="Pupil Ramp")
-                boxe.template_color_ramp(iris_ramp, 'color_ramp', expand=True)
+                sub_panel = panel_ui.panel(idname=panels['pupil_ramp'])
+
+                sub_panel[0].label(text="Pupil Color Ramp")
+
+                pupil_panel = sub_panel[1]
+                if pupil_panel is not None:
+                    pupil_row = pupil_panel.box()
+                    pupil_row.enabled = iris_shad.inputs[43].default_value > 0
+                    pupil_row.template_color_ramp(iris_ramp, 'color_ramp', expand=True)
 
 
 # endregion
-# =============
 # region Sclera Panel
-# Child of Face Panel
-class SACR7_UI2_sui_sclera(Panel):
+# Child of Eyes Panel
+class SACR7_UI2_sui_sclera(SACR7_UI2_face_panel, Panel):
     bl_label = "Sclera"
-    bl_idname = panel["sclera"]
-    bl_parent_id = panel["face"]
+    bl_idname = panels["sclera"]
+    bl_parent_id = panels["eyes"]
     bl_order = 1
-
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-    @classmethod
-    def poll(self, context):
-        try:
-            obj = context.active_object
-            face_on = obj.pose.bones["Rig_Properties"]["Face Toggle"]
-            return face_on
-        except (AttributeError, KeyError, TypeError):
-            return False
 
     def draw(self, context):
         # Rig Data
         rig = context.active_object
-        rig_data = rig.data
         rig_bones = rig.pose.bones
-        rig_bc = rig_data.collections_all
 
         props = rig_bones[config_objs["eyes"]]
 
@@ -737,7 +667,7 @@ class SACR7_UI2_sui_sclera(Panel):
         rig_child = rig.children_recursive
 
         mat_obj = utils.lookup_name(
-            list=rig_child, query=config_objs['materials'])
+            bl_list=rig_child, query=config_objs['materials'])
 
         iris_mat = mat_obj.material_slots[2].material.node_tree
         iris_shad = iris_mat.nodes['Sclera_Shader']
@@ -809,9 +739,12 @@ class SACR7_UI2_sui_sclera(Panel):
         emit_enable = iris_shad.inputs[31].default_value
 
         row = panel.row()
-        split = row.split(factor=.92)
-        split.label(text="Emission", icon="OUTLINER_OB_LIGHT")
-        split.prop(iris_shad.inputs[31],
+        row.label(text="Emission", icon="OUTLINER_OB_LIGHT")
+
+        row = row.row()
+        row.alignment = 'RIGHT'
+        row.ui_units_x = 3
+        row.prop(iris_shad.inputs[31],
                    'default_value',
                    text="",
                    icon="CHECKBOX_HLT" if emit_enable is True else "CHECKBOX_DEHLT",
@@ -824,9 +757,8 @@ class SACR7_UI2_sui_sclera(Panel):
 
             if iris_shad.inputs[33].default_value is True:
 
-                row = panel.row(align=True)
-                split = row.split(factor=.5)
-                split.prop(
+                row = panel.row()
+                row.prop(
                     iris_shad.inputs[33], "default_value",
                     text='Split Channels',
                     icon="CHECKBOX_HLT" if iris_shad.inputs[33].default_value is True else "CHECKBOX_DEHLT",
@@ -863,38 +795,25 @@ class SACR7_UI2_sui_sclera(Panel):
                     iris_shad.inputs[39], "default_value", text="")
 
             else:
-                row = panel.row(align=True)
+                row = panel.row()
                 row.prop(
                     iris_shad.inputs[33], "default_value",
                     text='Split Channels',
                     icon="CHECKBOX_HLT" if iris_shad.inputs[33].default_value is True else "CHECKBOX_DEHLT",
                 )
-
+                row = panel.row()
                 row.prop(iris_shad.inputs[36],
                          "default_value", text="Strength")
 
 
 # endregion
-# =============
 # region Mouth Panel
 # Child of Face Panel
-class SACR7_UI2_sui_mouth(Panel):
+class SACR7_UI2_sui_mouth(SACR7_UI2_face_panel, Panel):
     bl_label = "Mouth"
-    bl_idname = panel["mouth"]
-    bl_parent_id = panel["face"]
+    bl_idname = panels["mouth"]
+    bl_parent_id = panels["face"]
     bl_order = 2
-
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-    @classmethod
-    def poll(self, context):
-        try:
-            obj = context.active_object
-            face_on = obj.pose.bones["Rig_Properties"]["Face Toggle"]
-            return face_on
-        except (AttributeError, KeyError, TypeError):
-            return False
 
     def draw(self, context):
         # Rig Data
@@ -906,16 +825,33 @@ class SACR7_UI2_sui_mouth(Panel):
         props = rig_bones[config_objs["mouth"]]
 
         # set Child Object Indices
-        i = 0
         rig_child = rig.children_recursive
 
         mat_obj = utils.lookup_name(
-            list=rig_child, query=config_objs['materials'])
+            bl_list=rig_child, query=config_objs['materials'])
 
         mouth_back = mat_obj.material_slots[3].material.node_tree.nodes['Material']
         teeth = mat_obj.material_slots[4].material.node_tree.nodes['Material']
 
         panel = self.layout
+        row = panel.row()
+        row.label(text="Controller Toggle")
+        row = panel.row()
+        col = row.column()
+
+        # Left Eyebrow
+        row = col.row(align=True)
+        row.prop(rig_bc["Mouth"], 'is_visible',
+                 text="Basic",
+                 icon="HIDE_ON" if rig_bc["Mouth"].is_visible is False else "HIDE_OFF"
+                 )
+        row_e = row.row(align=True)
+        row_e.enabled = rig_bc['Mouth'].is_visible
+        row_e.prop(rig_bc["Mouth_Advanced"],
+                   'is_visible',
+                   text="Advanced",
+                   icon="HIDE_ON" if rig_bc["Mouth_Advanced"].is_visible is False else "HIDE_OFF"
+                   )
 
         row = panel.row()
         row.label(text="Options", icon="PROPERTIES")
@@ -949,17 +885,14 @@ class SACR7_UI2_sui_mouth(Panel):
 
 
 # endregion
-# =============
 # region Torso Panel
 # Child of Global
-class SACR7_UI2_sui_torso(Panel):
+class SACR7_UI2_sui_torso(SACR7_UI2_panel, Panel):
     bl_label = "Torso"
-    bl_idname = panel["torso"]
-    bl_parent_id = panel["global"]
+    bl_idname = panels["torso"]
+    bl_parent_id = panels["global"]
     bl_order = 1
 
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
 
     @classmethod
     def poll(self, context):
@@ -990,17 +923,13 @@ class SACR7_UI2_sui_torso(Panel):
 
 
 # endregion
-# =============
 # region Arm Panel
 # Child of Global
-class SACR7_UI2_sui_arm(Panel):
+class SACR7_UI2_sui_arm(SACR7_UI2_panel, Panel):
     bl_label = "Arm"
-    bl_idname = panel["arm"]
-    bl_parent_id = panel["global"]
+    bl_idname = panels["arm"]
+    bl_parent_id = panels["global"]
     bl_order = 2
-
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
 
     def draw(self, context):
         # Variables and Data
@@ -1011,8 +940,6 @@ class SACR7_UI2_sui_arm(Panel):
 
         # UI Layout
         panel = self.layout
-
-        p_row = panel.row()
 
         panel.separator(type="SPACE")
         p_row = panel.row()
@@ -1042,17 +969,14 @@ class SACR7_UI2_sui_arm(Panel):
 
 
 # endregion
-# =============
 # region Quick Parent Panel
 # Child of Global
-class SACR7_UI2_sui_quick_parent(Panel):
+class SACR7_UI2_sui_quick_parent(SACR7_UI2_panel, Panel):
     bl_label = "Quick Parents"
-    bl_idname = panel["quick_parent"]
-    bl_parent_id = panel["global"]
+    bl_idname = panels["quick_parent"]
+    bl_parent_id = panels["global"]
     bl_order = 3
 
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
 
     def draw(self, context):
         panel = self.layout
@@ -1145,17 +1069,14 @@ class SACR7_UI2_sui_quick_parent(Panel):
 
 
 # endregion
-# =============
 # region Armor Panel
 # Child of Global
-class SACR7_UI2_sui_armor(Panel):
+class SACR7_UI2_sui_armor(SACR7_UI2_panel, Panel):
     bl_label = "Armor"
-    bl_idname = panel['armor']
-    bl_parent_id = panel['global']
+    bl_idname = panels['armor']
+    bl_parent_id = panels['global']
     bl_order = 4
 
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
 
     @classmethod
     def poll(self, context):
@@ -1174,7 +1095,7 @@ class SACR7_UI2_sui_armor(Panel):
         rig_child = rig.children_recursive
 
         mat_obj = utils.lookup_name(
-            list=rig_child, query=config_objs['materials'])
+            bl_list=rig_child, query=config_objs['materials'])
 
         mainProp = rig_bones[config_objs["main"]]
 
@@ -1261,7 +1182,6 @@ class SACR7_UI2_sui_armor(Panel):
 
 
 # endregion
-# =============
 # region Registering Start
 classes = [
     SACR7_UI2_ui_global,
@@ -1272,6 +1192,7 @@ classes = [
     SACR7_UI2_sui_quick_parent,
     SACR7_UI2_sui_armor,
     SACR7_UI2_sui_eyebrows,
+    SACR7_UI2_sui_eyes,
     SACR7_UI2_sui_iris,
     SACR7_UI2_sui_sclera,
     SACR7_UI2_sui_mouth,
@@ -1282,14 +1203,9 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
-
-if __name__ == "__main__":
-    register()
-
 # endregion
-# =============
+

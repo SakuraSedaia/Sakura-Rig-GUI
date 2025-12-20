@@ -5,7 +5,7 @@
 #
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -16,31 +16,32 @@
 from typing import Optional
 from bpy.ops import wm
 from bpy.utils import extension_path_user
-from bpy.props import StringProperty, IntProperty, BoolProperty
+from bpy.props import StringProperty, BoolProperty
 from bpy.types import AddonPreferences, Context, Preferences, Operator
 import bpy
-module_info = {
+
+bl_info = {
+    "name": __package__,  # UI Name
+    "id": "sedaia_prefs",  # UI ID
     "author": "Sakura Sedaia",
-    "author_id": "SEDAIA",
+    "author_id": "Sedaia",
 
-    "name": __package__,
-    "id": "sedaia_prefs",
-    "version": (1, 0, 0),
-    "description": "The Preferences used by the Addon",
-
+    "version": (1, 0, 1),
     "blender": (5, 0, 0),
-
+    "location": "",
+    "description": "Addon User Preferences",
     "warning": "",
     "doc_url": "",
-    "tracker_url": "",
+    "tracker_url": "https://github.com/SakuraSedaia/Sedaia-Rig-Interfaces/issues",
+    "category": "Interface",
 }
 # endregion
 # =============
 # region Rig Settings
 config: dict = {
-    'root_default_dir': extension_path_user(module_info["name"], create=True, path=""),
-    'rig_default_dir': extension_path_user(module_info["name"], create=True, path="rigs"),
-    'player_default_dir': extension_path_user(module_info["name"], create=True, path="playerdata")
+    'root_default_dir': extension_path_user(bl_info["name"], create=True, path=""),
+    'rig_default_dir': extension_path_user(bl_info["name"], create=True, path="rigs"),
+    'player_default_dir': extension_path_user(bl_info["name"], create=True, path="playerdata")
 }
 
 
@@ -56,7 +57,7 @@ ops = {
 # =============
 # region Start Preferences
 class PREFS_user_preferences(AddonPreferences):
-    bl_idname = module_info['name']
+    bl_idname = bl_info['name']
 
     prompt_to_refresh_player_data: BoolProperty(
         name="Prompt to Regen Player Data",
@@ -88,8 +89,6 @@ def get_prefs(context: Optional[Context] = None) -> Optional[Preferences]:
         prefs = context.preferences.addons.get(__package__, None)
     if prefs:
         return prefs.preferences
-    # To make the addon stable and non-exception prone, return None
-    # raise Exception("Could not fetch user preferences")
     return None
 
 

@@ -1,16 +1,12 @@
 schema_version = "1.0.0"
 
-id = "Sakura_Rig_Interface"
-version = "3.0.0"
+id = "Sakura_Rig_GUI"
+version = "3.1.0"
 name = "Sakura's Rig Interfaces"
 tagline = "A control script for use with Sakura's Rigs"
 maintainer = "Sakura Sedaia"
-# Supported types: "add-on", "theme"
 type = "add-on"
-
-# # Optional: link to documentation, support, source files, etc
 website = "https://sakura-sedaia.com/addon/sakura-rig-interface"
-tracker = "https://github.com/SakuraSedaia/Sedaia-Rig-Interfaces/issues"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
@@ -56,7 +52,7 @@ license = ["SPDX:GPL-3.0-or-later"]
 # # For longer explanations use the documentation or detail page.
 #
 [permissions]
-network = "Used to download Files from various networks"
+network = "Used to download rigs from Sakura's Github and Player Skins from Mojang Servers"
 files = "Save and Store Player Skin Information and Downloaded Rigs"
 # clipboard = "Copy and paste bone transforms"
 

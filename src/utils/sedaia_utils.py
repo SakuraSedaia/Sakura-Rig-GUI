@@ -5,15 +5,13 @@
 #
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# =============
 # region Imports and Common Variables
-
 from .. import prefs
 from pathlib import Path
 from shutil import rmtree
@@ -40,65 +38,41 @@ pref_access = prefs.get_prefs
 
 
 # endregion
-# =============
 # region Addon Manifest
-module_info = {
+bl_info = {
+    "name": "Sedaia Utilities",  # UI Name
+    "id": "sedaia_utils",  # UI ID
     "author": "Sakura Sedaia",
-    "author_id": "SEDAIA",
+    "author_id": "Sedaia",
 
-    "name": "Sedaia Utilities",
-    'id': "sedaia_utils",
-    "version": (1, 0, 0),
-    "description": "A collection of Operators",
-
+    "version": (1, 0, 1),
     "blender": (5, 0, 0),
-
+    "location": "",
+    "description": "A collection of Operators",
     "warning": "",
     "doc_url": "",
-    "tracker_url": "",
-}
-
-# endregion
-
-# =============
-# region Module Metadata (DO NOT MODIFY THIS SECTION)
-bl_info = {
-    "name": module_info["name"],
-    "author": module_info["author"],
-    "version": module_info["version"],
-    "blender": module_info["blender"],
-    "location": "",
-    "description": module_info["description"],
-    "warning": "",
-    "doc_url": module_info["doc_url"],
-    "tracker_url": module_info["tracker_url"],
+    "tracker_url": "https://github.com/SakuraSedaia/Sedaia-Rig-Interfaces/issues",
     "category": "Interface",
 }
-
 # endregion
-# =============
 # region Module Settings
-
-# TODO: This needs to reference directly off of Preferences, once I figure
-# out how to actually get varables to read from Preferences.
+# TODO: This needs to reference directly off of Preferences, once I figure out how to actually get variables to read from Preferences.
 config: dict = {
-    "file_path": extension_path_user(prefs.module_info["name"], create=True, path=""),
-    "player_path": extension_path_user(prefs.module_info["name"], create=True, path="playerdata"),
+    "file_path": extension_path_user(prefs.bl_info["name"], create=True, path=""),
+    "player_path": extension_path_user(prefs.bl_info["name"], create=True, path="playerdata"),
     "utility_bone_name": "Sedaia.Skin_Utility_Config",
 
     # Skin Configs
-    # TODO: This needs to reference directly off of Preferences, once I figure
-    # out how to actually get varables to read from Preferences.
-    "skin_file_path": extension_path_user(prefs.module_info["name"], create=True, path="playerdata"),
+    # TODO: This needs to reference directly off of Preferences, once I figure out how to actually get variables to read from Preferences.
+    "skin_file_path": extension_path_user(prefs.bl_info["name"], create=True, path="playerdata"),
     "skin_utility_bone": "Sedaia.Skin_Utility_Config",
     "skin_links": {
         "api": "https://api.mojang.com/users/profiles/minecraft/",
         "profile": "https://sessionserver.mojang.com/session/minecraft/profile/",
-        "textures": "http://textures.minecraft.net/texture/",
+        "textures": "https://textures.minecraft.net/texture/",
     }
 }
 # endregion
-# =============
 # region Object IDs
 op_id: str = "sedaia_utils_ot"
 ops: dict = {
@@ -119,10 +93,6 @@ ops: dict = {
     "skin_add": f"{op_id}.skin_add",
     "skin_load": f"{op_id}.skin_load",
     "skin_purge": f"{op_id}.skin_purge",
-
-    # Rig Downloaders
-    "rigdown_download": f"{op_id}.rigdown_download",
-
 }
 
 menu_id: str = "SEDAIA_UTIL_MT"
@@ -130,11 +100,10 @@ menus: dict = {
     "skin_regen": f"{menu_id}_skin_regen",
     "skin_purge": f"{menu_id}_skin_purge",
 }
+
+
 # endregion
-# =============
 # region Utility Functions (def)
-
-
 def allow_online():
     return bpy.app.online_access
 
@@ -150,31 +119,30 @@ def is_packed(file):
         return False
 
 
-def lookup_name(list: dict, query: str):
-    for i in enumerate(list):
+def lookup_name(bl_list: dict, query: str):
+    for i in enumerate(bl_list):
         if query in i[1].name:
-            return list[i[0]]
+            return bl_list[i[0]]
+        else:
+            continue
+
+    return None
 
 
 # endregion
-# =============
 # region HTTP Operations (def)
-
-
 def download(url, path):
     request.urlretrieve(url=url, filename=path)
 
 
-def retrieveJSON(url):
+def retrieve_json(url):
     try:
-        error.URLError
         return json.loads(request.urlopen(url).read())
     except (request.HTTPError, error.URLError):
         return "http_error"
 
 
 # endregion
-# =============
 # region File Ops Classes
 class FILE_open(Operator):
     bl_label = "Open"
@@ -188,7 +156,6 @@ class FILE_open(Operator):
 
 
 # endregion
-# =============
 # region Image Functions (def)
 def pack_img(name):
     image = get_img(name)
@@ -210,7 +177,6 @@ def reload_img(name):
 
 
 # endregion
-# =============
 # region Image Classes
 class IMAGE_pack(Operator):
     bl_label = ""
@@ -234,13 +200,9 @@ class IMAGE_reload(Operator):
     def execute(self, context):
         reload_img(self.path)
         return {"FINISHED"}
-# endregion
-# =============
-# region Rig Functions (def)
 
 
 # endregion
-# =============
 # region Rig Classes
 class RIGS_set_name(Operator):
     bl_idname = ops['rig_rename']
@@ -265,37 +227,33 @@ class RIGS_set_name(Operator):
 
 
 # endregion
-# =============
 # region Skin Utility Functions (def)
-def loadPlayer(Name):
+def load_player(name):
     try:
-        with open(f"{config['player_path']}/{Name}/{Name}_Data.json", "r") as file:
+        with open(f"{config['player_path']}/{name}/{name}_Data.json", "r") as file:
             PlayerJSON = json.load(file)
             return PlayerJSON
     except (TypeError, FileNotFoundError):
         return "load_fail"
 
 
-def decodeMoj(string):
+def decode_moj(string):
     return json.loads(str(b64decode(string), "utf-8"))
 
 
-def grabProfile(uuid):
+def grab_profile(uuid):
     http = config["skin_links"]
     try:
-        RawMojangPr = retrieveJSON(f"{http["profile"]}{uuid}")
-        MojangProfile = decodeMoj(RawMojangPr["properties"][0]["value"])
+        RawMojangPr = retrieve_json(f"{http["profile"]}{uuid}")
+        MojangProfile = decode_moj(RawMojangPr["properties"][0]["value"])
         return MojangProfile
     except (RuntimeError, TypeError):
         return "ty"
 
 
 # endregion
-# =============
 # region Skin Utility Classes
 # Determines what set of actions must be taken when a Username is entered and submitted
-
-
 class SKIN_router(Operator):
     """Enter in a Java Edition username that you wish to download/use the skin of."""
     bl_idname = ops['skin_router']
@@ -332,6 +290,7 @@ class SKIN_router(Operator):
 class SKIN_get(Operator):
     bl_label = "Retrieve Player Data"
     bl_idname = ops['skin_get']
+    bl_options = {"REGISTER", "INTERNAL"}
 
     def execute(self, context):
         http: str = config["skin_links"]
@@ -340,15 +299,15 @@ class SKIN_get(Operator):
         skinMeta: PoseBone = rig_bones[config["utility_bone_name"]]
         Username: str = skinMeta["Username"]
         FilePath: str = config["player_path"]
-        Remote = retrieveJSON(f"{http["api"]}{Username}")
+        Remote = retrieve_json(f"{http["api"]}{Username}")
         if Remote == "http":
             self.report(
                 {"ERROR_INVALID_INPUT"},
                 f"Could not find profile by the name of {Username}, check internet connection and Username spelling")
             return {"FINISHED"}
         try:
-            Player = grabProfile(Remote['id'])
-        except (TypeError):
+            Player = grab_profile(Remote['id'])
+        except TypeError:
             self.report(
                 {"ERROR"}, "Error looking up Player, please check username is correct")
             return {'FINISHED'}
@@ -362,16 +321,16 @@ class SKIN_get(Operator):
         try:
             if Player["textures"]["SKIN"]["metadata"]["model"] == "slim":
                 PlayerModel = "1"
-        except (KeyError):
+        except KeyError:
             PlayerModel = "0"
 
         try:
             SkinPath = f"{PlayerPath}/{Username}_Skin.png"
             SkinHash = Player["textures"]["SKIN"]["url"].strip(
                 http["textures"])
-
+            print(f"{Player["textures"]["SKIN"]["url"]}")
             download(Player["textures"]["SKIN"]["url"], SkinPath)
-        except (request.HTTPError):
+        except request.HTTPError:
             self.report({"ERROR"}, "Skin Not Found")
             return {"CANCELLED"}
 
@@ -382,7 +341,7 @@ class SKIN_get(Operator):
             CapeExists = True
 
             download(Player["textures"]["CAPE"]["url"], CapePath)
-        except (KeyError):
+        except KeyError:
             CapePath = ""
             CapeExists = False
             CapeHash = ""
@@ -414,7 +373,7 @@ class SKIN_get(Operator):
 
         try:
             O.sedaia_utils_ot.skin_load(index=0)
-        except (AttributeError):
+        except AttributeError:
             self.report({"ERROR"}, "Could not load skin")
 
         return {"FINISHED"}
@@ -424,11 +383,11 @@ class SKIN_get(Operator):
 class SKIN_add(Operator):
     bl_label = "Add to Index"
     bl_idname = ops['skin_add']
+    bl_options = {"REGISTER", "INTERNAL"}
 
     def execute(self, context):
         http: str = config["skin_links"]
         rig = context.active_object
-        rig_data = rig.data
         rig_bones = rig.pose.bones
         skinProp = config["utility_bone_name"]
         skinMeta = rig_bones[skinProp]
@@ -437,11 +396,11 @@ class SKIN_add(Operator):
         FilePath = config['player_path']
 
         PlayerFile = f"{FilePath}/{Username}/{Username}_Data.json"
-        LocalPlayer = loadPlayer(Username)
+        LocalPlayer = load_player(Username)
 
         try:
-            Player = grabProfile(LocalPlayer["UUID"])
-        except (TypeError):
+            Player = grab_profile(LocalPlayer["UUID"])
+        except TypeError:
             wm.call_menu(name=menus["skin_purge"])
             return {"FINISHED"}
 
@@ -461,7 +420,7 @@ class SKIN_add(Operator):
             try:
                 if Player["textures"]["SKIN"]["metadata"]["model"] == "slim":
                     PlayerModel: str = "1"
-            except (KeyError):
+            except KeyError:
                 PlayerModel: str = "0"
 
             try:
@@ -474,7 +433,7 @@ class SKIN_add(Operator):
                     http["textures"])
 
                 download(Player["textures"]["SKIN"]["url"], SkinPath)
-            except (request.HTTPError):
+            except request.HTTPError:
                 self.report({"ERROR"}, "Skin Not Found")
                 return {"CANCELLED"}
 
@@ -489,7 +448,7 @@ class SKIN_add(Operator):
                 CapeExists = True
 
                 download(Player["textures"]["CAPE"]["url"], CapePath)
-            except (KeyError):
+            except KeyError:
                 CapePath = ""
                 CapeExists = False
                 CapeHash = ""
@@ -520,13 +479,14 @@ class SKIN_add(Operator):
 
 # Loads a skin from local storage
 class SKIN_load(Operator):
-    '''
+    """
     Loads the newest copy of the provided skin
 
-    index: int = The skin to load, enter -1 to load the newest skin. 
-    '''
+    index: int = The skin to load, enter -1 to load the newest skin.
+    """
     bl_idname = ops['skin_load']
     bl_label = "Load Player Data"
+    bl_options = {"REGISTER", "INTERNAL"}
 
     index: IntProperty(
         default=-1,
@@ -539,11 +499,9 @@ class SKIN_load(Operator):
         rig_bones = rig.pose.bones
         skinProp = config["utility_bone_name"]
         skinMeta = rig_bones[skinProp]
-        Username = skinMeta["Username"]
 
         # Metadata
         MatObj = skinMeta["MatObj"]
-        SkinMat = skinMeta["SkinMatName"]
         SkinImgNode = skinMeta["SkinImageNodeID"]
         ArmPropName = skinMeta["ArmPropName"]
         ArmPropBone = rig_bones[skinMeta["ArmPropBone"]]
@@ -553,13 +511,12 @@ class SKIN_load(Operator):
         Username = skinMeta["Username"]
         SyncName = skinMeta["SyncName"]
         SyncArms = skinMeta["SyncArms"]
-        SyncCape = skinMeta["SyncCape"]
 
         index = self.index
-        playerData = loadPlayer(Username)
+        playerData = load_player(Username)
 
         # Set Material Handler
-        MaterialManager = lookup_name(list=rig.children, query=MatObj)
+        MaterialManager = lookup_name(bl_list=rig.children, query=MatObj)
 
         SkinNodetree = MaterialManager.material_slots[0].material.node_tree
         SkinNode = SkinNodetree.nodes[SkinImgNode].image
@@ -573,7 +530,7 @@ class SKIN_load(Operator):
         if SyncArms:
             try:
                 ArmPropBone.ArmType = playerData["SKINS"][index]["model"]
-            except (TypeError):
+            except TypeError:
                 ArmPropBone[ArmPropName] = int(
                     playerData["SKINS"][index]["model"])
 
@@ -596,7 +553,6 @@ class SKIN_purge(Operator):
 
     def execute(self, context):
         rig = context.active_object
-        rig_data = rig.data
         rig_bones = rig.pose.bones
         skinProp = config["utility_bone_name"]
         skinMeta = rig_bones[skinProp]
@@ -632,7 +588,7 @@ class SKIN_purge(Operator):
                 O.sedaia_utils_ot.skin_get()
 
             else:
-                if Path(targetDir).exists() is not True:
+                if not Path(targetDir).exists():
                     Path(f"{targetDir}").mkdir(
                         parents=True, exist_ok=True)
 
@@ -650,7 +606,7 @@ class SKIN_purge(Operator):
         return {"FINISHED"}
 
 
-# Promps to ask if the player is sure they want to purge a skin
+# Prompts to ask if the player is sure they want to purge a skin
 class SKIN_menu_purge(Menu):
     bl_idname = menus["skin_purge"]
     bl_label = "Confirm Purging of Player Data"
@@ -677,13 +633,8 @@ class SKIN_menu_regen(Menu):
         layout.operator(ops['skin_add'], text="Add Entry")
         layout.menu(menu=menus["skin_purge"], text="Clean Slate", icon="ERROR")
 
-# endregion
-# =============
-# region Rig Downloader
-
 
 # endregion
-# =============
 # region Register Classes
 classes = [
     # File Operators
@@ -719,4 +670,3 @@ def unregister():
         unregister_class(cls)
 
 # endregion
-# =============

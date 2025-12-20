@@ -1,11 +1,15 @@
-## Sakura's Rig Interfaces V3
+Description:
 
-Current Version: 3.1.0
-Targeted Blender: 5.0
-Minimum Blender: 4.2
+Sakura's Rig Interfaces is a container Extension designed to make development of UI scripts even easier. This Extension is a continuation of my other, now deprecated Extension ([Sakura Rig GUI](https://extensions.blender.org/add-ons/sakura-rig-gui/)), and expands on the original idea by adding in a dynamic UI loader, Skin Download Utility, and the architecture to more easily add features to the Extension down the 
 
----
+In time, I will be uploading tutorials to my Youtube on adding your own UI's to the addon.
 
+Note: SACR is not included, and at this time must be downloaded separately
+
+Support: https://discord.gg/Qk4pfbG7Pf
+
+Initial Version Release Notes
+## Summary
 V3.1.0 is a small corrective release fixing some minor navigation issues I experienced with the UI in practical use as well as fixing some minor issues I personally noticed.
 
 These issues and changes were brought about after a render that I worked on following the release of R7.4.0, in which I found the UI to be a bit cluttered and difficult to navigate, specifically around the face section. The changes made in this release are intended to make the UI more user friendly and easier to navigate. As well as adding in some missing Material options for the Irises and Sclera.
@@ -32,7 +36,7 @@ On the backend, a lot of dirty laundry was cleaned up, mainly regarding unused v
 - Added `bl_options = {"REGISTER", "INTERNAL"}` to all Skin Operators
 - Added new Backup function for the Skin downloader.
 
-### Global UI -> Skin Utility UI
+### Global UI → Skin Utility UI
 
 - Renamed module from "global_ui" to "SKIN_utility_ui"
 - Moved module into "sedaia_ui" from Root
