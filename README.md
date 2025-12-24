@@ -1,13 +1,8 @@
 # Sakura's Rig Interfaces
 
-
-Sakura's Rig Interfaces is a container addon designed to make development of UI scripts even easier by adding a dynamic loading script along with global utilities which make having duplicate classes a rarer occurance. This Branch is the Development branch, 
+Sakura's Rig Interfaces is a container addon designed to make development of UI scripts even easier by adding a dynamic loading script along with global utilities which make having duplicate classes a rarer occurance.
 
 ---
-
-## WARNING
-
-This branch cannot be active at the same time as the stable branch due to conflicting classes
 
 ## Instructions
 

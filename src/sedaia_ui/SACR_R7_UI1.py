@@ -1,4 +1,4 @@
-from ..utils import sedaia_utils
+from .. import utils
 from bpy.types import Panel, Operator
 import bpy
 rig = "SACR"
@@ -11,9 +11,8 @@ id_str = [
 ]
 mesh_mat_obj = "MaterialEditor"
 AddonID = "sedaia_interface"
-script_version = "1.3.1"
+script_version = "1.3.2"
 
-dev_mode = True
 
 D = bpy.data
 C = bpy.context
@@ -46,6 +45,13 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
         obj = context.active_object
         armature = obj.data
         bone = obj.pose.bones
+        rig_child = obj.children_recursive
+
+        if obj.data[id_prop] == id_str[0]:
+            for l in enumerate(rig_child):
+                if mesh_mat_obj in l[1].name:
+                    mat_obj = rig_child[l[0]]
+                    break
 
         main = bone["Rig_Properties"]
         layers = armature.collections_all
@@ -59,17 +65,6 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
             latticeProp = armature['Show Lattices']
         except (AttributeError, KeyError, TabError):
             latticeProp = False
-
-        if obj.data[id_prop] == id_str[0]:
-            # Object Name: MaterialEditor
-            i = 0
-            for l in obj.children:
-                i = i + 1
-                # Find Material Object
-                objName = l.name.split(".")[0]
-                if objName == mesh_mat_obj:
-                    mat_obj = l
-                    break
 
         skin = mat_obj.material_slots[0].material.node_tree
         skinTex = skin.nodes["Rig Texture"].image
@@ -101,7 +96,6 @@ class SEDAIA_PT_sacr_7_uiGlobal(Panel):
 
         row = layout.row(align=True)
         row.label(text="Rig Settings")
-        row = layout.row()
         col = layout.column_flow(columns=2, align=True)
         col.prop(main, '["Wireframe Bones"]', toggle=True,
                  invert_checkbox=True, text="Solid Bones")
@@ -326,14 +320,12 @@ class SEDAIA_PT_sacr_7_suiEyebrows(T.Panel):
 
         eyebrows = bone["Eyebrow_Properties"]
 
+        rig_child = obj.children_recursive
+
         if obj.data[id_prop] == id_str[0]:
-            # Object Name: MaterialEditor
-            i = 0
-            for l in obj.children:
-                i = i + 1
-                objName = l.name.split(".")[0]
-                if objName == mesh_mat_obj:
-                    matObj = l
+            for l in enumerate(rig_child):
+                if mesh_mat_obj in l[1].name:
+                    matObj = rig_child[l[0]]
                     break
 
             eyebrowMat = matObj.material_slots[6].material.node_tree.nodes['Node']
@@ -434,22 +426,16 @@ class SEDAIA_PT_sacr_7_suiEyes(Panel):
             lashTog = False
 
         # Face Material Objs
+
+        rig_child = obj.children_recursive
+
         if obj.data[id_prop] == id_str[0]:
-            i = 0
-            for l in obj.children:
-                i = i + 1
-                objName = l.name.split(".")[0]
-                if objName == mesh_mat_obj:
-                    matObj = l
+            for l in enumerate(rig_child):
+                if mesh_mat_obj in l[1].name:
+                    matObj = rig_child[l[0]]
                     break
-            irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
-            scleraMat = matObj.material_slots[2].material.node_tree.nodes['Node']
             lashMat = matObj.material_slots[7].material.node_tree.nodes['Group']
             sparkleMat = matObj.material_slots[5].material.node_tree.nodes['Emission']
-            irisImgProp = matObj.material_slots[1].material.node_tree.nodes["Image Texture.001"].image
-
-            scleraGrad = scleraMat.inputs['Gradient'].default_value
-            scleraSplit = scleraMat.inputs['Heterochromia'].default_value
 
         # UI
         layout = self.layout
@@ -513,13 +499,14 @@ class SEDAIA_PT_sacr_7_muiIrises(Panel):
         obj = context.active_object
 
         # Object Name: MaterialEditor
-        i = 0
-        for l in obj.children:
-            i = i + 1
-            objName = l.name.split(".")[0]
-            if objName == mesh_mat_obj:
-                matObj = l
-                break
+
+        rig_child = obj.children_recursive
+
+        if obj.data[id_prop] == id_str[0]:
+            for l in enumerate(rig_child):
+                if mesh_mat_obj in l[1].name:
+                    matObj = rig_child[l[0]]
+                    break
 
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
 
@@ -631,16 +618,16 @@ class SEDAIA_PT_sacr_7_muiPupil(Panel):
 
     def draw(self, context):
         obj = context.active_object
-        i = 0
-        for l in obj.children:
-            i = i + 1
-            objName = l.name.split(".")[0]
-            if objName == mesh_mat_obj:
-                matObj = l
-                break
+
+        rig_child = obj.children_recursive
+
+        if obj.data[id_prop] == id_str[0]:
+            for l in enumerate(rig_child):
+                if mesh_mat_obj in l[1].name:
+                    matObj = rig_child[l[0]]
+                    break
 
         irisMat = matObj.material_slots[1].material.node_tree.nodes['Group.001']
-        irisImgProp = matObj.material_slots[1].material.node_tree.nodes["Image Texture.001"].image
 
         # UI
         layout = self.layout
@@ -713,13 +700,14 @@ class SEDAIA_PT_sacr_7_muiSclera(Panel):
         obj = context.active_object
 
         # Object Name: MaterialEditor
-        i = 0
-        for l in obj.children:
-            i = i + 1
-            objName = l.name.split(".")[0]
-            if objName == mesh_mat_obj:
-                matObj = l
-                break
+
+        rig_child = obj.children_recursive
+
+        if obj.data[id_prop] == id_str[0]:
+            for l in enumerate(rig_child):
+                if mesh_mat_obj in l[1].name:
+                    matObj = rig_child[l[0]]
+                    break
 
         scleraMat = matObj.material_slots[2].material.node_tree.nodes['Node']
 
@@ -836,14 +824,12 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
         bone = obj.pose.bones
         mouth = bone["Mouth_Properties"]
 
+        rig_child = obj.children_recursive
+
         if obj.data[id_prop] == id_str[0]:
-            # Object Name: MaterialEditor
-            i = 0
-            for l in obj.children:
-                i = i + 1
-                objName = l.name.split(".")[0]
-                if objName == mesh_mat_obj:
-                    matObj = l
+            for l in enumerate(rig_child):
+                if mesh_mat_obj in l[1].name:
+                    matObj = rig_child[l[0]]
                     break
 
             backMat = matObj.material_slots[3].material.node_tree.nodes["Group.001"]
@@ -868,7 +854,7 @@ class SEDAIA_PT_sacr_7_suiMouth(T.Panel):
         except (AttributeError, KeyError, TypeError):
             classic_molar = True
 
-        if classic_molar is True:
+        if classic_molar:
             col.prop(
                 mouth, '["Fangs Controller"]', toggle=True, text="Molar/Fang Controls"
             )

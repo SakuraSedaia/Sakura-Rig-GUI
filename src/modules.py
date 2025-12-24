@@ -1,35 +1,43 @@
 from importlib import reload, import_module
-import bpy
-import typing
 import pkgutil
-import os
 from pathlib import Path
 
-# =============
 # Core UI
-# =============
 if "prefs" in locals():
     reload(prefs)
 else:
     from . import prefs
 
-if "ulobal_ui" in locals():
-    reload(global_ui)
+if "Sakura_UI_Main" in locals():
+    reload(Sakura_UI_Main)
 else:
-    from . import global_ui
+    from .sedaia_ui import Sakura_UI_Main
 
-
-# =============
 # Utilities
-# =============
-if "sedaia_utils" in locals():
-    reload(sedaia_utils)
+if "utils" in locals():
+    reload(utils)
 else:
-    from .utils import sedaia_utils
+    from . import utils
+# endregion
 
-# =============
+
+# Import SACR Rigs
+if "SACR_R7_UI1" in locals():
+    reload(SACR_R7_UI1)
+else:
+    from .sedaia_ui import SACR_R7_UI1
+
+if "SACR_R7_UI2" in locals():
+    reload(SACR_R7_UI2)
+else:
+    from .sedaia_ui import SACR_R7_UI2
+
+if "SACR_R8_UI1" in locals():
+    reload(SACR_R8_UI1)
+else:
+    from .sedaia_ui import SACR_R8_UI1
+
 # Auto-Import Rig UIs
-# =============
 
 
 def get_all_submodules(directory):
@@ -51,21 +59,28 @@ def iter_submodule_names(path, root="rig_ui."):
             yield root + module_name
 
 
+# endregion
+# region Registering
 modules = (
     # Core UI
     prefs,
-    global_ui,
+    Sakura_UI_Main,
 
     # Utilities
-    sedaia_utils,
+    utils,
+
+    # SACR GUI's
+    SACR_R7_UI1,
+    SACR_R7_UI2,
+    SACR_R8_UI1
 )
+
 rig_modules = get_all_submodules(f"{Path(__file__).parent}/rig_ui/")
 
 
 def register():
     for mod in modules:
-        if hasattr(mod, "register"):
-            mod.register()
+        mod.register()
 
     for rMod in rig_modules:
         if hasattr(rMod, "register"):
@@ -74,8 +89,7 @@ def register():
 
 def unregister():
     for mod in reversed(modules):
-        if hasattr(mod, "unregister"):
-            mod.unregister()
+        mod.unregister()
 
     for rMod in reversed(rig_modules):
         if hasattr(rMod, "unregister"):
